@@ -34,9 +34,9 @@ jobs:
           scanners: 'vuln,misconfig,secret'
           severity: 'CRITICAL,HIGH'
           format: 'table'
-          # Ex.2 : mode rapport (non bloquant) tant que le code applicatif réel
-          # (Ex.3) n'a pas remplacé les images de démo volontairement vulnérables.
-          exit-code: '0'
+          # Bloquant : ceci scanne NOTRE code (pas les images de démo), 0 trouvaille
+          # actuellement (vérifié) -- c'est le vrai point de contrôle go/no-go build.
+          exit-code: '1'
 
   sca-scan-images:
     name: SCA scan (Trivy — images applicatives du docker-compose)
