@@ -1,0 +1,33 @@
+
+✓ master Security scan (DevSecOps — Ex.2) · 33869545275
+Triggered via push about 10 minutes ago
+
+JOBS
+✓ Secret scan (gitleaks) in 11s (ID 101012010264)
+✓ SCA scan (Trivy — images applicatives du docker-compose) (vulnerables/web-dvwa:latest) in 34s (ID 101012010464)
+✓ SCA scan (Trivy — filesystem/IaC) in 28s (ID 101012010508)
+✓ SCA scan (Trivy — images applicatives du docker-compose) (mysql:5.7) in 27s (ID 101012010549)
+✓ SCA scan (Trivy — images applicatives du docker-compose) (bkimminich/juice-shop:latest) in 30s (ID 101012010778)
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, gitleaks/gitleaks-action@v2. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Secret scan (gitleaks): .github#2
+
+! Cache save failed.
+SCA scan (Trivy — images applicatives du docker-compose) (vulnerables/web-dvwa:latest): .github#199
+
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+SCA scan (Trivy — filesystem/IaC): .github#2
+
+! Cache save failed.
+SCA scan (Trivy — filesystem/IaC): .github#199
+
+! Cache save failed.
+SCA scan (Trivy — images applicatives du docker-compose) (mysql:5.7): .github#199
+
+
+ARTIFACTS
+gitleaks-results.sarif
+
+For more information about a job, try: gh run view --job=<job-id>
+View this run on GitHub: https://github.com/Etudiant8/tp-cybersecurite-heliomed/actions/runs/33869545275
