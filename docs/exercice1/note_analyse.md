@@ -65,7 +65,7 @@ Voir `docs/exercice1/objectifs_securite.md` pour le détail. 5 objectifs mesurab
 
 **Choix des outils** justifié par la complémentarité constatée en pratique :
 - **Nmap** a révélé un risque d'infrastructure (clés SSH dupliquées, Samba superflu) invisible aux scanners applicatifs.
-- **ZAP** (scan passif) a quantifié 316 alertes de configuration HTTP sur l'application patient, sans risque de perturber le service — adapté à un contexte de données de santé.
+- **ZAP** (scan passif) a quantifié 319 alertes de configuration HTTP sur l'application patient, sans risque de perturber le service — adapté à un contexte de données de santé.
 - **Trivy** couvre la chaîne d'approvisionnement logicielle (CVE dans les images Docker), angle mort des deux outils précédents.
 
 ---

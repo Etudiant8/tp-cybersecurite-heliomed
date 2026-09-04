@@ -53,8 +53,8 @@
     white-space:pre-wrap; word-break:break-word;}
   pre .c1{color:#8fd694} pre .c2{color:#ffb454} pre .c3{color:#ff8a8a} pre .c4{color:#7dd3fc}
 
-  .callout{border-left:3px solid var(--accent); background:#eef2ff; padding:6px 10px; border-radius:0 6px 6px 0;
-    margin:8px 0; font-size:8.8pt;}
+  .callout{border-left:3px solid var(--accent); background:#eef2ff; padding:4px 10px; border-radius:0 6px 6px 0;
+    margin:5px 0; font-size:8.5pt;}
   .callout b{display:block; margin-bottom:2px; font-size:8.6pt;}
   .callout.warn{border-color:#b45309; background:#fff7ea;}
   .callout.danger{border-color:#b91c1c; background:#fdeeee;}
@@ -86,10 +86,10 @@
   .chart-card{border:1px solid var(--line); border-radius:8px; padding:8px 10px; background:#fbfcfd;}
   .chart-card h4{margin:0 0 2px; font-size:8.6pt; color:var(--accent-dark);}
 
-  .shotgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin:6px 0 4px;}
+  .shotgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:5px; margin:4px 0 2px;}
   .shot{border:1px solid var(--line); border-radius:5px; overflow:hidden; background:#0f172a;}
-  .shot img{width:100%; display:block; height:20mm; object-fit:cover; object-position:top left;}
-  .shot span{display:block; font-size:6.6pt; color:var(--ink-soft); text-align:center; padding:2px 0; background:#f7f8fa;}
+  .shot img{width:100%; display:block; height:30mm; object-fit:cover; object-position:top left;}
+  .shot span{display:block; font-size:7.2pt; color:var(--ink-soft); text-align:center; padding:2px 0; background:#f7f8fa;}
 
   ul.compact{margin:4px 0 8px; padding-left:16px; font-size:8.8pt;}
   ul.compact li{margin-bottom:2px;}
@@ -128,7 +128,7 @@
   données de santé RGPD). Le labo reproduit cette architecture avec OWASP Juice Shop (interface patient) et
   DVWA (composant applicatif de test) comme cibles d'entraînement, sur un réseau interne isolé.</p>
 
-  <svg viewBox="0 0 780 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:'Segoe UI',sans-serif;">
+  <svg viewBox="0 0 780 250" xmlns="http://www.w3.org/2000/svg" style="width:88%;height:auto;display:block;margin:0 auto;font-family:'Segoe UI',sans-serif;">
     <defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1d4ed8"/></marker></defs>
     <rect x="6" y="10" width="768" height="230" rx="12" fill="#f1f5fb" stroke="#c9d6ee"/>
     <text x="24" y="30" font-size="11" fill="#4b5563" font-weight="600">Réseau interne isolé « helio-lab » — 10.10.10.0/24</text>
@@ -162,18 +162,7 @@
   Preuve : <code>outputs/exercice1/preuve_vm_reseau.txt</code>.</div>
 
   <h2 class="h"><span class="num">2.</span>Environnement — outils installés</h2>
-  <table>
-    <thead><tr><th>Outil</th><th>Rôle</th><th>Version constatée</th></tr></thead>
-    <tbody>
-      <tr><td>VirtualBox</td><td>Hyperviseur des 2 VM labo</td><td>7.2.2r170484</td></tr>
-      <tr><td>Docker + Compose</td><td>Déploiement HelioMed (cibles)</td><td>29.4.0 (hôte)/20.10.24 (VM) · Compose v5.1.2/1.29.2</td></tr>
-      <tr><td>Git</td><td>Versionning projet</td><td>2.54.0.windows.1</td></tr>
-      <tr><td>OWASP ZAP</td><td>Scan passif web (DAST)</td><td>2.17.0 (+ Temurin JRE 17.0.20)</td></tr>
-      <tr><td>Nmap</td><td>Cartographie réseau</td><td>7.80 (poste) / 7.93 (dans les VM)</td></tr>
-      <tr><td>Trivy</td><td>Scan CVE images (SCA)</td><td>0.74.0</td></tr>
-    </tbody>
-  </table>
-  <p style="font-size:7.5pt;color:var(--ink-soft);margin:2px 0 3px">Captures réelles des commandes de version (poste de travail) :</p>
+  <p style="font-size:8pt;margin:0 0 4px">VirtualBox 7.2.2 · Docker 29.4.0/20.10.24 + Compose v5.1.2/1.29.2 · Git 2.54.0 · ZAP 2.17.0 · Nmap 7.80/7.93 · Trivy 0.74.0 — captures réelles ci-dessous.</p>
   <div class="shotgrid">
     <div class="shot"><img src="assets/v_virtualbox.png" alt="VBoxManage --version"><span>VBoxManage --version</span></div>
     <div class="shot"><img src="assets/v_docker.png" alt="docker --version"><span>docker / compose --version</span></div>
