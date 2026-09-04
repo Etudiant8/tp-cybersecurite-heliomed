@@ -86,6 +86,11 @@
   .chart-card{border:1px solid var(--line); border-radius:8px; padding:8px 10px; background:#fbfcfd;}
   .chart-card h4{margin:0 0 2px; font-size:8.6pt; color:var(--accent-dark);}
 
+  .shotgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin:6px 0 4px;}
+  .shot{border:1px solid var(--line); border-radius:5px; overflow:hidden; background:#0f172a;}
+  .shot img{width:100%; display:block; height:20mm; object-fit:cover; object-position:top left;}
+  .shot span{display:block; font-size:6.6pt; color:var(--ink-soft); text-align:center; padding:2px 0; background:#f7f8fa;}
+
   ul.compact{margin:4px 0 8px; padding-left:16px; font-size:8.8pt;}
   ul.compact li{margin-bottom:2px;}
 
@@ -158,16 +163,25 @@
 
   <h2 class="h"><span class="num">2.</span>Environnement — outils installés</h2>
   <table>
-    <thead><tr><th>Outil</th><th>Rôle</th><th>Version constatée</th><th></th></tr></thead>
+    <thead><tr><th>Outil</th><th>Rôle</th><th>Version constatée</th></tr></thead>
     <tbody>
-      <tr><td>VirtualBox</td><td>Hyperviseur des 2 VM labo</td><td><code>VBoxManage --version</code> → 7.2.2r170484</td><td><span class="badge ok">OK</span></td></tr>
-      <tr><td>Docker + Compose</td><td>Déploiement HelioMed (cibles)</td><td>Docker 29.4.0 (hôte)/20.10.24 (VM) · Compose v5.1.2/1.29.2</td><td><span class="badge ok">OK</span></td></tr>
-      <tr><td>Git</td><td>Versionning projet</td><td><code>git --version</code> → 2.54.0.windows.1</td><td><span class="badge ok">OK</span></td></tr>
-      <tr><td>OWASP ZAP</td><td>Scan passif web (DAST)</td><td>2.17.0 (+ Temurin JRE 17.0.20)</td><td><span class="badge ok">OK</span></td></tr>
-      <tr><td>Nmap</td><td>Cartographie réseau</td><td>7.80 (poste) / 7.93 (dans les VM)</td><td><span class="badge ok">OK</span></td></tr>
-      <tr><td>Trivy</td><td>Scan CVE images (SCA)</td><td><code>trivy --version</code> → 0.74.0</td><td><span class="badge ok">OK</span></td></tr>
+      <tr><td>VirtualBox</td><td>Hyperviseur des 2 VM labo</td><td>7.2.2r170484</td></tr>
+      <tr><td>Docker + Compose</td><td>Déploiement HelioMed (cibles)</td><td>29.4.0 (hôte)/20.10.24 (VM) · Compose v5.1.2/1.29.2</td></tr>
+      <tr><td>Git</td><td>Versionning projet</td><td>2.54.0.windows.1</td></tr>
+      <tr><td>OWASP ZAP</td><td>Scan passif web (DAST)</td><td>2.17.0 (+ Temurin JRE 17.0.20)</td></tr>
+      <tr><td>Nmap</td><td>Cartographie réseau</td><td>7.80 (poste) / 7.93 (dans les VM)</td></tr>
+      <tr><td>Trivy</td><td>Scan CVE images (SCA)</td><td>0.74.0</td></tr>
     </tbody>
   </table>
+  <p style="font-size:7.5pt;color:var(--ink-soft);margin:2px 0 3px">Captures réelles des commandes de version (poste de travail) :</p>
+  <div class="shotgrid">
+    <div class="shot"><img src="assets/v_virtualbox.png" alt="VBoxManage --version"><span>VBoxManage --version</span></div>
+    <div class="shot"><img src="assets/v_docker.png" alt="docker --version"><span>docker / compose --version</span></div>
+    <div class="shot"><img src="assets/v_git.png" alt="git --version"><span>git --version</span></div>
+    <div class="shot"><img src="assets/v_nmap.png" alt="nmap --version"><span>nmap --version</span></div>
+    <div class="shot"><img src="assets/v_trivy.png" alt="trivy --version"><span>trivy --version</span></div>
+    <div class="shot"><img src="assets/v_zap.png" alt="ZAP version"><span>ZAP.exe (VersionInfo)</span></div>
+  </div>
 
   <div class="page-foot"><span>HelioMed — TP Cybersécurité</span><span>Page 1 / 6</span></div>
 </div>
@@ -245,12 +259,12 @@
   <table>
     <thead><tr><th>Menace</th><th>Actif visé</th><th>V</th><th>I</th><th>Risque</th><th>Traitement</th></tr></thead>
     <tbody>
-      <tr><td>Information disclosure</td><td>BDD santé (MySQL)</td><td>3</td><td>4</td><td class="crit">12</td><td>Chiffrement au repos + secret manager</td></tr>
-      <tr><td>Spoofing</td><td>VM (clés SSH dupliquées)</td><td>3</td><td>3</td><td class="high">9</td><td>Régénérer clés SSH après clonage</td></tr>
+      <tr><td>Information disclosure</td><td>BDD (MySQL)</td><td>3</td><td>4</td><td class="crit">12</td><td>Chiffrement au repos + secret manager</td></tr>
+      <tr><td>Spoofing</td><td>VM helio-frontal/-applicatif (clés SSH dupliquées)</td><td>3</td><td>3</td><td class="high">9</td><td>Régénérer clés SSH après clonage</td></tr>
       <tr><td>Tampering</td><td>Appli patient (CSP absent)</td><td>3</td><td>3</td><td class="high">9</td><td>En-têtes sécurité au niveau Nginx</td></tr>
       <tr><td>Elevation of privilege</td><td>DVWA exposé</td><td>3</td><td>4</td><td class="crit">12</td><td>Isolation stricte, jamais hors réseau interne</td></tr>
-      <tr><td>Denial of service</td><td>Samba exposé inutilement</td><td>2</td><td>3</td><td class="med">6</td><td>Désinstaller Samba (hérité, superflu)</td></tr>
-      <tr><td>Repudiation</td><td>Logs Nginx non centralisés</td><td>2</td><td>3</td><td class="med">6</td><td>Centraliser logs (Wazuh, ex. suivants)</td></tr>
+      <tr><td>Denial of service</td><td>Reverse proxy Nginx (seul point d'entrée public)</td><td>2</td><td>3</td><td class="med">6</td><td>Rate limiting Nginx + WAF en amont</td></tr>
+      <tr><td>Repudiation</td><td>Comptes d'accès télétravail (mdp partagé)</td><td>2</td><td>3</td><td class="med">6</td><td>Comptes nominatifs + logs centralisés (Wazuh)</td></tr>
     </tbody>
   </table>
 
@@ -282,11 +296,12 @@
       <tr><td>Interne négligent/malveillant</td><td>Erreur, vengeance, revente d'accès</td><td>Accès légitime, télétravail</td></tr>
     </tbody>
   </table>
+  <p style="font-size:7.8pt;color:var(--ink-soft);margin:2px 0 4px">Chaque scénario nomme une <b>partie prenante intermédiaire</b> explicite dans le chemin d'attaque.</p>
   <ul class="compact">
-    <li><b>1. Vol de données de santé :</b> cybercriminel → BDD → CVE image non patchée ou faille config (ZAP) → pivot → exfiltration.</li>
-    <li><b>2. Rançongiciel télétravail :</b> cybercriminel → disponibilité → phishing dev → accès Git/déploiement → charge malveillante.</li>
-    <li><b>3. Abus d'accès interne :</b> interne malveillant → confidentialité → accès mal cloisonné → export massif.</li>
-    <li><b>4. Usurpation via clé SSH clonée</b> <span class="badge ok">constaté, pas théorique</span> — nmap révèle la clé hôte SSH partagée entre les 2 serveurs → usurpation sans alerte client → MITM / redirection trafic admin.</li>
+    <li><b>1. Vol de données de santé :</b> cybercriminel → <i>mainteneur tiers d'une image Docker publique</i> → BDD → CVE héritée non patchée ou faille config (ZAP) → pivot → exfiltration.</li>
+    <li><b>2. Rançongiciel télétravail :</b> cybercriminel → <i>poste personnel du développeur (BYOD)</i> → disponibilité → phishing → accès Git/déploiement compromis → charge malveillante.</li>
+    <li><b>3. Abus d'accès interne :</b> interne malveillant → <i>prestataire infogérance, accès VPN/SSH mutualisé</i> → confidentialité → accès mal cloisonné, non attribuable → export massif.</li>
+    <li><b>4. Usurpation via clé SSH clonée</b> <span class="badge ok">constaté, pas théorique</span> — interne/ciblé → <i>poste d'admin du prestataire (origine du clonage VM)</i> → nmap révèle la clé hôte SSH partagée entre les 2 serveurs → usurpation sans alerte client → MITM / redirection trafic admin.</li>
   </ul>
 
   <h2 class="h"><span class="num">7.</span>Objectifs de sécurité et choix des outils — Étape 1.4</h2>

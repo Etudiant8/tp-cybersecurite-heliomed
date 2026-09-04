@@ -42,18 +42,20 @@ Voir tableau complet dans `docs/exercice1/registre_actifs.md`. Points saillants 
 
 ### STRIDE (6 actifs, voir `docs/exercice1/stride_risques.md`)
 
-| Menace | Actif | Risque (V×I) |
+6 lignes, 6 actifs **distincts et nommés** du registre (§2) — pas de menace rattachée à un simple constat sans actif identifié :
+
+| Menace | Actif (registre) | Risque (V×I) |
 |---|---|---|
-| Information disclosure | BDD santé | 12 — Élevé |
-| Spoofing | VM (clés SSH dupliquées) | 9 — Élevé |
+| Information disclosure | BDD (MySQL) | 12 — Élevé |
+| Spoofing | VM helio-frontal / helio-applicatif (clés SSH dupliquées) | 9 — Élevé |
 | Tampering | Application patient (CSP absent) | 9 — Élevé |
+| Repudiation | Comptes d'accès télétravail (mdp root partagé, non attribuable) | 6 — Moyen |
+| Denial of service | Reverse proxy Nginx (seul point d'entrée public) | 6 — Moyen |
 | Elevation of privilege | DVWA exposé | 12 — Élevé |
-| Denial of service | Samba exposé inutilement | 6 — Moyen |
-| Repudiation | Logs Nginx non centralisés | 6 — Moyen |
 
 ### EBIOS Risk Manager (voir `docs/exercice1/ebios.md`)
 
-3 sources de risque identifiées (cybercriminel opportuniste, acteur ciblé, interne négligent/malveillant) et 4 scénarios stratégiques, dont un directement étayé par une preuve technique de ce TP (usurpation via clé SSH clonée).
+3 sources de risque identifiées (cybercriminel opportuniste, acteur ciblé, interne négligent/malveillant) et 4 scénarios stratégiques, **chacun avec une partie prenante intermédiaire explicite** (mainteneur d'image Docker tierce, poste personnel du développeur en BYOD, prestataire d'infogérance à accès mutualisé, poste d'administration à l'origine du clonage VM) — dont un directement étayé par une preuve technique de ce TP (usurpation via clé SSH clonée).
 
 ---
 

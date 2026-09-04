@@ -28,4 +28,6 @@ rtt min/avg/max/mdev = 2.368/3.385/4.952/0.956 ms
 
 Origine des VM : clones de UBU-BASE (Debian 12), réseau interne "helio-lab" (VirtualBox intnet),
 NIC1=NAT (setup/paquets), NIC2=intnet isolé (segment testé/scanné pour l'Exercice 1).
-Identifiants : root / [REDACTED-ROTATED-PASSWORD] (héritage UBU-BASE).
+Identifiants : voir fichier local non versionné .credentials.local (mot de passe changé
+depuis la revue sécurité de l'Ex.1 — l'ancien mot de passe hérité de UBU-BASE, qui avait
+été commité en clair par erreur, a été retiré du dépôt et remplacé sur les 2 VM).

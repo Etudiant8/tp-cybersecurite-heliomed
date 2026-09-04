@@ -3,6 +3,7 @@
 *.key
 .env
 **/secrets/
+.credentials.local
 
 # VirtualBox
 *.vdi
