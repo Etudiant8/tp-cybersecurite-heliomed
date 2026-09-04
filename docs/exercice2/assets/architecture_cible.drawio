@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net" agent="HelioMed TP Ex.2" version="24.7.17">
+  <diagram name="Architecture cible HelioMed" id="heliomed-arch-cible">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="780" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="internet" value="Internet / patients" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#94a3b8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="90" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fw0" value="Pare-feu perimetrique&#10;(pfSense)&#10;443/tcp uniquement" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#B91C1C;fontColor=#B91C1C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="170" y="115" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="zoneDmz" value="ZONE DMZ FRONTALE" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#EFF6FF;strokeColor=#1D4ED8;fontColor=#1D4ED8;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="80" width="260" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="frontal" value="helio-frontal&#10;10.10.10.10&#10;&#10;WAF (ModSecurity/Coraza)&#10;Reverse proxy Nginx - TLS 1.3" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#1D4ED8;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="365" y="120" width="210" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fw1" value="Pare-feu interne #1&#10;3000/tcp seul." style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#B91C1C;fontColor=#B91C1C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="130" width="100" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="zoneApp" value="ZONE APPLICATIVE" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#FFF7ED;strokeColor=#C2410C;fontColor=#C2410C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="80" width="260" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="applicatif" value="helio-applicatif&#10;10.10.10.20&#10;&#10;Docker - appli patient (app-net)&#10;chiffrement TLS interne, logs vers SIEM" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#C2410C;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="785" y="120" width="210" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fw2" value="Pare-feu interne #2&#10;3306/tcp seul." style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#B91C1C;fontColor=#B91C1C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="280" width="100" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="zoneData" value="ZONE DONNEES" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#FEF2F2;strokeColor=#B91C1C;fontColor=#B91C1C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="360" width="260" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="bdd" value="BDD (conteneur MySQL)&#10;helio-applicatif:3306 (interne)&#10;&#10;Chiffrement au repos (AES-256)&#10;reseau Docker data-net internal:true" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#B91C1C;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="785" y="400" width="210" height="105" as="geometry" />
+        </mxCell>
+
+        <mxCell id="backup" value="Sauvegardes&#10;chiffrees, hors site&#10;RPO <= 24h" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#94A3B8;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="405" width="130" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="siem" value="SIEM - collecte de logs (Wazuh)&#10;Auth SSH, Nginx, applicatif, pare-feu - NTP synchronise&#10;Correlation -> alerte -> Plan de reponse aux incidents (2.5)&#10;Traite le risque Repudiation identifie en Ex.1 (STRIDE)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#15803D;fillColor=#F0FDF4;fontColor=#15803D;" vertex="1" parent="1">
+          <mxGeometry x="430" y="580" width="380" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;" edge="1" parent="1" source="internet" target="fw0"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;" edge="1" parent="1" source="fw0" target="frontal"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;" edge="1" parent="1" source="frontal" target="fw1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;" edge="1" parent="1" source="fw1" target="applicatif"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#B91C1C;" edge="1" parent="1" source="applicatif" target="fw2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#B91C1C;" edge="1" parent="1" source="fw2" target="bdd"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;strokeColor=#94A3B8;" edge="1" parent="1" source="bdd" target="backup"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;strokeColor=#15803D;" edge="1" parent="1" source="fw0" target="siem"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;strokeColor=#15803D;" edge="1" parent="1" source="frontal" target="siem"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;strokeColor=#15803D;" edge="1" parent="1" source="applicatif" target="siem"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;strokeColor=#15803D;" edge="1" parent="1" source="bdd" target="siem"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
