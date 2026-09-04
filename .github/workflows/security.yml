@@ -1,0 +1,58 @@
+name: Security scan (DevSecOps — Ex.2)
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  secrets-scan:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  sca-scan-repo:
+    name: SCA scan (Trivy — filesystem/IaC)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy on repo (deps + misconfig)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln,misconfig,secret'
+          severity: 'CRITICAL,HIGH'
+          format: 'table'
+          # Ex.2 : mode rapport (non bloquant) tant que le code applicatif réel
+          # (Ex.3) n'a pas remplacé les images de démo volontairement vulnérables.
+          exit-code: '0'
+
+  sca-scan-images:
+    name: SCA scan (Trivy — images applicatives du docker-compose)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+          - bkimminich/juice-shop:latest
+          - vulnerables/web-dvwa:latest
+          - mysql:5.7
+    steps:
+      - name: Run Trivy on ${{ matrix.image }}
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: 'image'
+          image-ref: ${{ matrix.image }}
+          severity: 'CRITICAL,HIGH'
+          format: 'table'
+          exit-code: '0'
