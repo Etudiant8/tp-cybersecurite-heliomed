@@ -1,0 +1,11 @@
+Résumé des alertes ZAP — scan passif sur http://127.0.0.1:8888/ (helio-frontal, proxy vers Juice Shop)
+
+High: 0
+Medium: 116
+Low: 160
+Informational: 43
+Total: 319
+
+Détail complet : zap_alerts.json (JSON brut) et zap_report.html (rapport formaté)
+Méthode : spider (crawl) + scan passif automatique (aucune attaque active envoyée),
+via l'API ZAP en mode daemon, cible atteinte via redirection NAT (host:8888 -> helio-frontal:80).

@@ -1,0 +1,20 @@
+Preuve — Déploiement HelioMed opérationnel (architecture 2 VM + reverse proxy)
+
+=== Conteneurs sur helio-applicatif (10.10.10.20) ===
+CONTAINER ID   IMAGE                          STATUS          PORTS                                       NAMES
+helio-applicatif-dvwa    vulnerables/web-dvwa:latest   Up   0.0.0.0:8080->80/tcp
+helio-bdd                mysql:5.7                     Up   3306/tcp (interne)
+helio-frontal-juiceshop  bkimminich/juice-shop:latest  Up   0.0.0.0:3000->3000/tcp
+
+=== Nginx reverse proxy sur helio-frontal (10.10.10.10) ===
+Config : /etc/nginx/sites-available/helio-nginx.conf (voir infra/nginx.conf)
+- / -> proxy_pass http://10.10.10.20:3000/  (Juice Shop, simule l'appli patient/API)
+- /dvwa/ -> proxy_pass http://10.10.10.20:8080/  (composant applicatif de test)
+
+=== Test end-to-end depuis helio-frontal ===
+curl http://localhost/       -> HTTP 200 (Juice Shop via proxy)
+curl http://localhost/dvwa/  -> HTTP 302 (DVWA, redirection login normale)
+
+Architecture validée : 2 VM Debian (frontal + applicatif/BDD), réseau interne isolé
+helio-lab (10.10.10.0/24), Nginx en frontal, cibles vulnérables + BDD sur l'applicatif —
+conforme au périmètre HelioMed (Flask/Nginx/PostgreSQL simulés par Juice Shop/DVWA/MySQL).
