@@ -4,8 +4,8 @@
 > La part IA (assistance Claude Code) doit être explicitée pour chaque entrée où elle a été utilisée.
 
 ## Binôme
-- Membre 1 :
-- Membre 2 :
+- Membre 1 : Deven Imazoute
+- Membre 2 : _(TP réalisé en solo)_
 
 ## Phase 0 — Installation environnement
 

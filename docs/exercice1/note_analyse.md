@@ -1,6 +1,6 @@
 # Note d'analyse — Exercice 1 : Analyse de l'environnement de sécurité HelioMed
 
-**Binôme :** _(à compléter)_
+**Binôme :** Deven Imazoute
 **Périmètre :** plateforme HelioMed (API Flask/Nginx/PostgreSQL, 2 serveurs Linux, données de santé RGPD), simulée dans un labo isolé avec OWASP Juice Shop (interface patient) et DVWA (composant applicatif de test).
 
 ---
