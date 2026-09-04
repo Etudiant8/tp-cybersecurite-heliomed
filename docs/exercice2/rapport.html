@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HelioMed — Exercice 2 : Conception et planification de la sécurité</title>
+<style>
+  :root{
+    --ink:#1b2330; --ink-soft:#525c6b; --line:#dfe3e9;
+    --accent:#1d4ed8; --accent-dark:#0f2557;
+    --crit:#b91c1c; --high:#b45309; --med:#a16207; --low:#1d4ed8; --info:#6b7280;
+    --r-crit:#fbe2e2; --r-high:#fdecd3; --r-med:#fdf6cf; --r-low:#e6edfb; --r-ok:#dcfce7;
+    --code-bg:#111827; --code-ink:#e5e9f0;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#c8ccd2;color:var(--ink);
+    font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;}
+  body{padding:14mm 0 30mm;}
+
+  .page{
+    width:210mm; min-height:297mm; margin:0 auto 10mm; background:#fff;
+    box-shadow:0 3px 14px rgba(0,0,0,.28); position:relative;
+    padding:16mm 16mm 14mm; font-size:10.3pt; line-height:1.42;
+  }
+  .page-head{display:flex; justify-content:space-between; align-items:baseline;
+    border-bottom:1px solid var(--line); padding-bottom:5px; margin-bottom:12px;
+    font-size:8pt; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em;}
+  .page-foot{position:absolute; bottom:8mm; left:16mm; right:16mm;
+    display:flex; justify-content:space-between; font-size:8pt; color:var(--ink-soft);
+    border-top:1px solid var(--line); padding-top:5px;}
+
+  h1.doctitle{font-size:19pt; margin:2px 0 3px; color:var(--accent-dark); font-weight:800; letter-spacing:-.01em;}
+  h2.doctitle-sub{font-size:11.5pt; margin:0 0 14px; color:var(--ink-soft); font-weight:500;}
+  h2.h{font-size:12.5pt; margin:0 0 8px; color:var(--accent-dark); font-weight:800;
+    border-left:4px solid var(--accent); padding-left:8px;}
+  h2.h .num{color:var(--accent)}
+  h3.h3{font-size:10.6pt; margin:12px 0 5px; color:var(--accent-dark); font-weight:700;}
+  p{margin:0 0 8px; color:#28303e;}
+
+  table{width:100%; border-collapse:collapse; margin:6px 0 10px; font-size:8pt; page-break-inside:avoid;}
+  thead th{background:var(--accent-dark); color:#fff; text-align:left; padding:4px 5px; font-weight:600;}
+  tbody td{padding:3.5px 5px; border-top:1px solid var(--line); vertical-align:top;}
+  tbody tr:nth-child(even){background:#f7f8fa;}
+  td.crit{background:var(--r-crit); color:var(--crit); font-weight:700;}
+  td.high{background:var(--r-high); color:var(--high); font-weight:700;}
+  td.med{background:var(--r-med); color:var(--med); font-weight:700;}
+  td.low{background:var(--r-low); color:var(--low); font-weight:700;}
+  td.ok{background:var(--r-ok); color:#15803d; font-weight:700;}
+
+  code{background:#eef1f6; padding:0 4px; border-radius:3px; font-size:.92em; color:var(--accent-dark);
+    font-family:"Cascadia Code","Consolas",monospace;}
+  pre{background:var(--code-bg); color:var(--code-ink); padding:8px 10px; border-radius:6px; overflow-x:hidden;
+    font-family:"Cascadia Code","Consolas",monospace; font-size:7.3pt; line-height:1.38; margin:6px 0 10px;
+    white-space:pre-wrap; word-break:break-word;}
+  pre .c1{color:#8fd694} pre .c2{color:#ffb454} pre .c3{color:#ff8a8a} pre .c4{color:#7dd3fc} pre .c5{color:#c4b5fd}
+
+  .callout{border-left:3px solid var(--accent); background:#eef2ff; padding:4px 10px; border-radius:0 6px 6px 0;
+    margin:5px 0; font-size:8.5pt;}
+  .callout b{display:block; margin-bottom:2px; font-size:8.6pt;}
+  .callout.warn{border-color:#b45309; background:#fff7ea;}
+  .callout.danger{border-color:#b91c1c; background:#fdeeee;}
+  .callout.ok{border-color:#15803d; background:#eefaf1;}
+
+  .cols2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .cols3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
+
+  figure{margin:6px 0;}
+  figure img{width:100%; display:block; border:1px solid var(--line); border-radius:5px;}
+  figcaption{font-size:7.5pt; color:var(--ink-soft); margin-top:3px; text-align:center;}
+
+  .meta-strip{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:12px 0 16px;
+    border:1px solid var(--line); border-radius:8px; padding:9px 12px; background:#f7f9fc;}
+  .meta-strip div b{display:block; font-size:7.3pt; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft);}
+  .meta-strip div span{font-size:9.2pt; font-weight:700; color:var(--accent-dark);}
+
+  svg{display:block}
+
+  .badge{display:inline-block; padding:1px 7px; border-radius:999px; font-size:7.6pt; font-weight:700;}
+  .badge.ok{background:#e7f6ec; color:#15803d;}
+  .badge.warn{background:#fff3e0; color:#b45309;}
+
+  ul.compact{margin:4px 0 8px; padding-left:16px; font-size:8.8pt;}
+  ul.compact li{margin-bottom:3px;}
+
+  @media print{
+    html,body{background:#fff; padding:0;}
+    .page{box-shadow:none; margin:0; width:auto; min-height:0; page-break-after:always;}
+    .page:last-child{page-break-after:auto;}
+    @page{size:A4; margin:14mm 14mm 16mm;}
+  }
+  @media screen and (max-width:480px){
+    .page{width:100%; padding:6mm; font-size:9.6pt;}
+    .meta-strip{grid-template-columns:repeat(2,1fr)}
+    .cols2,.cols3{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 — Plan de sécurité ============ -->
+<div class="page">
+  <div class="page-head"><span>TP Cybersécurité &amp; protection des données</span><span>HelioMed — Exercice 2</span></div>
+
+  <h1 class="doctitle">Conception et planification de la sécurité</h1>
+  <h2 class="doctitle-sub">Plan de sécurité · DevSecOps · Architecture cible · Plan de tests · Réponse aux incidents</h2>
+
+  <div class="meta-strip">
+    <div><b>Binôme</b><span>Deven Imazoute</span></div>
+    <div><b>Date</b><span>04/09/2026</span></div>
+    <div><b>Suite de</b><span>Exercice 1</span></div>
+    <div><b>Dépôt</b><span>GitHub (privé)</span></div>
+  </div>
+
+  <h2 class="h"><span class="num">1.</span>Mesures de sécurité — Étape 2.1</h2>
+  <p style="font-size:8.4pt">15 mesures (minimum 12 requis), reliées à un contrôle ISO/IEC 27002:2022 <b>et</b> à une
+  règle du guide d'hygiène ANSSI. <span class="badge ok">[Ex.1]</span> = corrige directement une faille réelle constatée en Ex.1.</p>
+  <table>
+    <thead><tr><th>#</th><th>Mesure</th><th>ISO 27002:2022</th><th>ANSSI</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>MFA sur tous les accès admin (GitHub, VPN, bastion)</td><td>5.17 · 8.5</td><td>R8</td></tr>
+      <tr><td>2</td><td>Clés SSH individuelles, jamais de compte partagé <span class="badge ok">Ex.1</span></td><td>5.16 · 8.2</td><td>R8</td></tr>
+      <tr><td>3</td><td>Régénération des secrets après clonage de VM <span class="badge ok">Ex.1</span></td><td>8.9 · 8.24</td><td>R15</td></tr>
+      <tr><td>4</td><td>Segmentation réseau 3 zones (DMZ/appli/données)</td><td>8.22 · 8.20</td><td>R15-17</td></tr>
+      <tr><td>5</td><td>Pare-feu à règles explicites, allow-list</td><td>8.20 · 8.21</td><td>R18-19</td></tr>
+      <tr><td>6</td><td>Chiffrement des données de santé au repos</td><td>8.24</td><td>R13</td></tr>
+      <tr><td>7</td><td>Chiffrement en transit TLS, y compris interne</td><td>8.24 · 5.14</td><td>R13</td></tr>
+      <tr><td>8</td><td>Gestionnaire de secrets, fin des mdp en clair <span class="badge ok">Ex.1</span></td><td>8.24 · 5.17</td><td>R5</td></tr>
+      <tr><td>9</td><td>Rotation des secrets (90j / immédiate si fuite) <span class="badge ok">Ex.1</span></td><td>8.24 · 5.18</td><td>R5, R8</td></tr>
+      <tr><td>10</td><td>Journalisation centralisée vers SIEM</td><td>8.15 · 8.16</td><td>R33-35</td></tr>
+      <tr><td>11</td><td>Sauvegardes chiffrées et testées (RPO ≤24h)</td><td>8.13</td><td>R37</td></tr>
+      <tr><td>12</td><td>Durcissement — services inutiles supprimés <span class="badge ok">Ex.1</span></td><td>8.9 · 8.8</td><td>R9-11</td></tr>
+      <tr><td>13</td><td>Gestion des correctifs (patch mgmt, délai max)</td><td>8.8</td><td>R12</td></tr>
+      <tr><td>14</td><td>Sécurité applicative OWASP Top 10 <span class="badge ok">Ex.1</span></td><td>8.26 · 8.28</td><td>R39-41</td></tr>
+      <tr><td>15</td><td>Scan SCA/DAST intégré au pipeline CI/CD</td><td>8.29 · 8.8</td><td>R41</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:7.6pt;color:var(--ink-soft)">Détail complet : <code>docs/exercice2/plan_securite.md</code>.</p>
+
+  <div class="page-foot"><span>HelioMed — TP Cybersécurité</span><span>Page 1 / 6</span></div>
+</div>
+
+<!-- ============ PAGE 2 — DevSecOps + CI ============ -->
+<div class="page">
+  <div class="page-head"><span>TP Cybersécurité &amp; protection des données</span><span>HelioMed — Exercice 2</span></div>
+
+  <h2 class="h"><span class="num">2.</span>Intégration DevSecOps — Étape 2.2</h2>
+  <table>
+    <thead><tr><th>Phase</th><th>Mesures placées</th><th>Point de contrôle go/no-go</th></tr></thead>
+    <tbody>
+      <tr><td>Conception</td><td>#4 Segmentation · #6-7 Chiffrement · #8 Secrets · STRIDE/EBIOS (Ex.1)</td><td>Schéma validé et raccordé aux VM réelles avant tout déploiement</td></tr>
+      <tr><td>Build (CI)</td><td>#15 Scan SCA (Trivy) · scan secrets (gitleaks) · #14 OWASP</td><td>Ex.2 : rapport non bloquant. Ex.3 sur code réel : 0 CVE critique → merge, sinon build rejeté</td></tr>
+      <tr><td>Déploiement</td><td>#1-3 MFA/SSH/secrets · #5 Pare-feu · #12-13 Durcissement</td><td>Checklist durcissement signée (Lynis) avant bascule</td></tr>
+      <tr><td>Run</td><td>#9 Rotation · #10 SIEM · #11 Sauvegardes · scans périodiques</td><td>Alerte SIEM critique → plan de réponse (§5) avant reprise</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="h3">Pipeline CI réel — <code>.github/workflows/security.yml</code></h3>
+  <p style="font-size:8.2pt">Gitleaks (secrets) + Trivy (filesystem/IaC + 3 images du docker-compose), à chaque push.
+  <b>Vérifié en conditions réelles</b> — poussé sur GitHub, exécuté, corrigé une fois (version d'action invalide), 5/5 jobs verts au 2ᵉ essai.</p>
+  <pre>jobs:
+  secrets-scan:
+    steps:
+      - uses: gitleaks/gitleaks-action@v2          <span class="c1"># ✓ passé — SARIF produit</span>
+  sca-scan-repo:
+    steps:
+      - uses: aquasecurity/trivy-action@master
+        with: {scan-type: fs, scanners: 'vuln,misconfig,secret'}
+  sca-scan-images:
+    strategy:
+      matrix: {image: [juice-shop, web-dvwa, mysql:5.7]}
+    steps:
+      - uses: aquasecurity/trivy-action@master      <span class="c1"># ✓ 3/3 images passées</span></pre>
+
+  <div class="callout ok"><b>Preuve d'exécution réelle (pas un stub)</b>
+  <code>gh run view</code> confirme 5/5 jobs ✓. Le scan Trivy sur <code>vulnerables/web-dvwa</code> a retrouvé
+  les <b>805 CVE</b ; (254 CRITICAL) déjà constatées en Ex.1, <b>et</b> son scanner de secrets a détecté une
+  <b>clé privée SSL embarquée</b> dans l'image (<code>/etc/ssl/private/ssl-cert-snakeoil.key</code>) —
+  preuve que l'outil analyse réellement le contenu.</div>
+
+  <div class="page-foot"><span>HelioMed — TP Cybersécurité</span><span>Page 2 / 6</span></div>
+</div>
+
+<!-- ============ PAGE 3 — Architecture cible ============ -->
+<div class="page">
+  <div class="page-head"><span>TP Cybersécurité &amp; protection des données</span><span>HelioMed — Exercice 2</span></div>
+
+  <h2 class="h"><span class="num">3.</span>Architecture de sécurité cible — Étape 2.3</h2>
+  <p style="font-size:8.4pt">3 zones (DMZ frontale / applicative / données), ancrées sur les <b>IP réelles du labo</b>
+  (helio-frontal 10.10.10.10, helio-applicatif 10.10.10.20) — pas un schéma générique. Source éditable :
+  <code>assets/architecture_cible.drawio</code>.</p>
+
+  <figure><img src="assets/architecture_cible.png" alt="Architecture cible HelioMed" style="border:1px solid var(--line)"></figure>
+
+  <div class="callout warn"><b>Écarts assumés avec l'état actuel (Ex.1)</b>
+  La BDD est aujourd'hui colocalisée avec l'appli sans réseau Docker dédié ni pare-feu interne #2 ;
+  le canal frontal↔applicatif est en HTTP clair. Ces deux écarts sont la cible prioritaire de l'Ex.3.</div>
+
+  <div class="page-foot"><span>HelioMed — TP Cybersécurité</span><span>Page 3 / 6</span></div>
+</div>
+
+<!-- ============ PAGE 4 — Plan de tests ============ -->
+<div class="page">
+  <div class="page-head"><span>TP Cybersécurité &amp; protection des données</span><span>HelioMed — Exercice 2</span></div>
+
+  <h2 class="h"><span class="num">4.</span>Plan de tests de sécurité — Étape 2.4</h2>
+  <table>
+    <thead><tr><th>Test</th><th>Outil</th><th>Cible</th><th>Critère</th><th>État réel constaté</th></tr></thead>
+    <tbody>
+      <tr><td>DAST</td><td>ZAP</td><td>Appli patient</td><td>0 High non traité</td><td class="ok">✓ Conforme (0 High)</td></tr>
+      <tr><td>SCA</td><td>Trivy</td><td>Image applicative</td><td>0 CVE critique</td><td class="crit">✗ Non conforme (8 CRIT démo)</td></tr>
+      <tr><td>Durcissement</td><td>Lynis</td><td>2 VM Linux</td><td>Score en hausse documentée</td><td class="high">Baseline 61-62/100</td></tr>
+      <tr><td>Réseau</td><td>Nmap</td><td>2 VM</td><td>Aucun port inutile</td><td class="crit">✗ Non conforme (Samba ouvert)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="h3">Audit Lynis — baseline réelle (exécutée, pas seulement planifiée)</h3>
+  <table>
+    <thead><tr><th>VM</th><th>Hardening index</th><th>Suggestions</th><th>Warnings</th></tr></thead>
+    <tbody>
+      <tr><td>helio-frontal (10.10.10.10)</td><td class="high">61/100</td><td>52</td><td>2</td></tr>
+      <tr><td>helio-applicatif (10.10.10.20)</td><td class="high">62/100</td><td>53</td><td>2</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:8pt">Scores proches (VM clonées de la même base). Suggestions prioritaires cohérentes avec le
+  plan de sécurité : installer <code>fail2ban</code> (#1), mot de passe GRUB, âge min/max des mots de passe (#9).
+  Détail : <code>outputs/exercice2/lynis_*_report.dat</code>.</p>
+
+  <h3 class="h3">Priorisation des non-conformités</h3>
+  <ul class="compact">
+    <li><b>Nmap — Samba ouvert</b> : correction rapide (désinstallation), aucune dépendance bloquante → Ex.3 J1</li>
+    <li><b>Trivy — CVE critiques image démo</b> : dépend du remplacement par le code applicatif réel en Ex.3 (Juice Shop/DVWA volontairement vulnérables par conception)</li>
+    <li><b>ZAP — alertes Medium</b> : ajout des en-têtes CSP/HSTS au niveau Nginx → Ex.3 J1</li>
+  </ul>
+
+  <div class="page-foot"><span>HelioMed — TP Cybersécurité</span><span>Page 4 / 6</span></div>
+</div>
+
+<!-- ============ PAGE 5 — Plan de réponse aux incidents ============ -->
+<div class="page">
+  <div class="page-head"><span>TP Cybersécurité &amp; protection des données</span><span>HelioMed — Exercice 2</span></div>
+
+  <h2 class="h"><span class="num">5.</span>Plan de réponse aux incidents (ébauche) — Étape 2.5</h2>
+
+  <h3 class="h3">Rôles</h3>
+  <table>
+    <thead><tr><th>Rôle</th><th>Qui</th><th>Responsabilité</th></tr></thead>
+    <tbody>
+      <tr><td>Décideur</td><td>Responsable technique/DSI</td><td>Déclenche/lève le plan, arbitre, valide la notification CNIL</td></tr>
+      <tr><td>Agit</td><td>Admin sys/réseau + dev d'astreinte</td><td>Confinement, éradication, restauration</td></tr>
+      <tr><td>Communique</td><td>DPO / RGPD</td><td>Notification CNIL, information des patients si risque élevé</td></tr>
+      <tr><td>Support</td><td>Prestataire infogérance</td><td>Renfort technique si incapacité de l'équipe interne</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="h3">Niveaux de gravité</h3>
+  <table>
+    <thead><tr><th>Niveau</th><th>Exemple</th><th>Délai</th></tr></thead>
+    <tbody>
+      <tr><td class="crit">P1 Critique</td><td>Fuite données santé, ransomware actif</td><td>&lt; 30 min</td></tr>
+      <tr><td class="high">P2 Élevé</td><td>Compte admin compromis, CVE critique exploitée</td><td>&lt; 2 h</td></tr>
+      <tr><td class="med">P3 Modéré</td><td>Alerte SIEM non confirmée, port ouvert inattendu (Samba, Ex.1)</td><td>&lt; 24 h</td></tr>
+      <tr><td>P4 Faible</td><td>Alerte config mineure</td><td>Backlog sécurité</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="h3">6 phases NIST SP 800-61</h3>
+  <p style="font-size:8.4pt">1. <b>Préparation</b> (ce plan, astreinte, SIEM, sauvegardes testées) · 2. <b>Identification</b>
+  (alerte SIEM, ticket horodaté) · 3. <b>Confinement</b> (isolement réseau via pare-feu interne, rotation immédiate
+  des secrets — mesure #9) · 4. <b>Éradication</b> (patch, régénération des clés — mesure #3) · 5. <b>Rétablissement</b>
+  (restauration testée — mesure #11) · 6. <b>Retour d'expérience</b> (mise à jour du registre d'actifs/STRIDE si risque non anticipé).</p>
+
+  <div class="callout danger"><b>Obligation RGPD — notification CNIL sous 72h</b>
+  HelioMed traite des données de santé (art. 9 RGPD). Toute violation présentant un risque pour les personnes
+  concernées doit être notifiée à la CNIL <b>sous 72h</b> (art. 33), même incomplète. Information des patients
+  obligatoire (art. 34) si risque élevé, sauf chiffrement effectif (mesure #6) rendant les données inintelligibles.
+  Le délai démarre dès la phase 2 (identification), pas après confirmation complète.</div>
+
+  <div class="page-foot"><span>HelioMed — TP Cybersécurité</span><span>Page 5 / 6</span></div>
+</div>
+
+<!-- ============ PAGE 6 — Logbook + Conclusion ============ -->
+<div class="page">
+  <div class="page-head"><span>TP Cybersécurité &amp; protection des données</span><span>HelioMed — Exercice 2</span></div>
+
+  <h2 class="h"><span class="num">6.</span>Journal de bord et part IA</h2>
+  <table>
+    <thead><tr><th>Étape</th><th>Résultat</th></tr></thead>
+    <tbody>
+      <tr><td>2.1 Plan de sécurité (15 mesures)</td><td>✅ OK</td></tr>
+      <tr><td>2.2 Pipeline CI (gitleaks + Trivy)</td><td>❌ version d'action invalide → ✅ corrigé, 5/5 jobs verts</td></tr>
+      <tr><td>2.3 Schéma d'architecture cible</td><td>✅ 3 zones, IP réelles, exporté .drawio/.svg/.png</td></tr>
+      <tr><td>2.4 Plan de tests + baseline Lynis</td><td>✅ table remplie + audit réellement exécuté sur les 2 VM</td></tr>
+      <tr><td>2.5 Plan de réponse aux incidents</td><td>✅ OK</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><b>Part IA</b>
+  Rédaction et implémentation réalisées avec Claude Code. Le pipeline CI a été <b>activement testé</b> (poussé,
+  exécuté, debuggé via <code>gh run view</code>) plutôt que simplement écrit et supposé fonctionnel — une
+  erreur de version d'action a été détectée et corrigée en conditions réelles. L'audit Lynis a été
+  <b>réellement exécuté</b> sur les 2 VM plutôt que planifié sur le papier. Contrainte de temps : Ex.2 rédigé
+  en environ 2h entre la remise d'Ex.1 et l'échéance de 17h30 le même jour.</div>
+
+  <h2 class="h"><span class="num">7.</span>Conclusion</h2>
+  <p style="font-size:8.8pt">Le plan de sécurité et l'architecture cible traitent directement les 6 risques
+  STRIDE identifiés en Ex.1 (voir mesures marquées <span class="badge ok">Ex.1</span>). Le plan de tests
+  documente honnêtement l'écart entre la cible (3 zones, TLS de bout en bout, 0 CVE critique) et l'état
+  réel constaté (Samba ouvert, BDD colocalisée, 805 CVE sur l'image de démonstration) — cet écart devient
+  le plan de travail concret de l'Exercice 3.</p>
+
+  <div class="page-foot"><span>HelioMed — TP Cybersécurité</span><span>Page 6 / 6</span></div>
+</div>
+
+</body>
+</html>

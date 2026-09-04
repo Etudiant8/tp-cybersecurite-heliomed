@@ -45,7 +45,7 @@ Table complète dans `plan_tests.md`, avec pour chaque test l'**état actuel ré
 |---|---|
 | ZAP — 0 alerte High | ✅ Oui (0 High constaté en Ex.1) |
 | Trivy — 0 CVE critique | ❌ Non (8 CRITICAL sur l'image de démo) |
-| Lynis — score en hausse | Baseline **réellement exécutée** sur les 2 VM ce jour (voir `outputs/exercice2/`) |
+| Lynis — score en hausse | Baseline **réellement exécutée** : 61/100 (frontal), 62/100 (applicatif) — voir `outputs/exercice2/` |
 | Nmap — aucun port inutile | ❌ Non (Samba ouvert sans usage, constaté en Ex.1) |
 
 ## 5. Plan de réponse aux incidents (Étape 2.5)

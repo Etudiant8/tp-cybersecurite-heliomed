@@ -9,10 +9,25 @@
 
 ## Exécution Lynis (baseline, Ex.2)
 
-Premier passage Lynis exécuté sur les 2 VM pour établir la référence (baseline) avant durcissement.
-Résultats bruts : `outputs/exercice2/lynis_helio-frontal.txt`, `outputs/exercice2/lynis_helio-applicatif.txt`.
+Premier passage Lynis 3.0.8 **réellement exécuté** sur les 2 VM (pas seulement planifié) pour établir
+la référence (baseline) avant durcissement :
+
+| VM | Hardening index | Suggestions | Warnings |
+|---|---|---|---|
+| helio-frontal (10.10.10.10) | **61/100** | 52 | 2 (paquet vulnérable détecté, pas de résolveur DNS secondaire) |
+| helio-applicatif (10.10.10.20) | **62/100** | 53 | 2 |
+
+Scores très proches (cohérent : les 2 VM sont clonées depuis la même base UBU-BASE). La cible Ex.3 est
+de faire progresser ce score après application des mesures de durcissement #12-13.
+
+Résultats bruts : `outputs/exercice2/lynis_helio-frontal_report.dat` + `.log` (et équivalent applicatif).
 Le score de hausse documentée (critère du tableau ci-dessus) se mesurera par comparaison avec un
 second passage après application des mesures de durcissement (#12-13 du plan de sécurité) en Ex.3.
+
+Extrait des suggestions prioritaires (helio-frontal) : installer `fail2ban` (bannissement après
+échecs d'authentification répétés), mot de passe GRUB, durcissement des règles de mot de passe
+(`AUTH-9230/9262/9282/9286`), age minimum/maximum des mots de passe — cohérent avec les mesures
+#1, #2, #9 du plan de sécurité.
 
 ## Priorisation des non-conformités constatées
 
