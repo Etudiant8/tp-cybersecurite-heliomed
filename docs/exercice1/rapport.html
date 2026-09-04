@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HelioMed — Exercice 1 : Analyse de l'environnement de sécurité</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --paper:#ffffff; --ink:#1b2330; --ink-soft:#4b5563;
+    --line:#e2e5ea; --accent:#1d4ed8; --accent-soft:#eef2ff;
+    --crit:#b91c1c; --high:#d97706; --med:#ca8a04; --low:#2563a8; --info:#6b7280;
+    --ok:#15803d; --code-bg:#0f172a; --code-ink:#e2e8f0;
+    --r-crit:#fde8e8; --r-high:#fef3e2; --r-med:#fffbe0; --r-low:#eaf2ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;}
+  .page{max-width:960px;margin:0 auto;padding:0 24px 80px;}
+
+  /* Cover */
+  .cover{background:linear-gradient(135deg,#0f2557,#1d4ed8 65%,#2f6fed);
+    color:#fff;padding:64px 48px;margin-bottom:40px;border-radius:0 0 18px 18px;}
+  .cover .tag{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);
+    padding:4px 12px;border-radius:999px;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:18px;}
+  .cover h1{font-size:2.3rem;margin:0 0 8px;font-weight:800;letter-spacing:-.01em;}
+  .cover h2{font-size:1.2rem;margin:0 0 26px;font-weight:500;color:#dbe6ff;}
+  .cover-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px;
+    border-top:1px solid rgba(255,255,255,.25);padding-top:22px;}
+  .cover-meta div b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#b9cdfb;margin-bottom:4px;font-weight:600;}
+  .cover-meta div span{font-size:14.5px;font-weight:600;}
+
+  h2.section{font-size:1.5rem;margin:56px 0 6px;padding-top:10px;border-top:3px solid var(--accent);
+    color:#0f2557;font-weight:800;}
+  h2.section .num{color:var(--accent);margin-right:8px;}
+  .section-sub{color:var(--ink-soft);margin:0 0 22px;font-size:.97rem;}
+  h3{font-size:1.12rem;margin:30px 0 10px;color:#0f2557;font-weight:700;}
+  p{color:#2a3342;}
+
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px 26px;margin:16px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.04);}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 22px;font-size:.92rem;background:var(--paper);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  thead th{background:#0f2557;color:#fff;text-align:left;padding:10px 12px;font-weight:600;font-size:.83rem;
+    text-transform:uppercase;letter-spacing:.03em;}
+  tbody td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top;color:#28303e;}
+  tbody tr:nth-child(even){background:#fafbfc;}
+  td.crit{background:var(--r-crit);color:var(--crit);font-weight:700;}
+  td.high{background:var(--r-high);color:var(--high);font-weight:700;}
+  td.med{background:var(--r-med);color:var(--med);font-weight:700;}
+  td.low{background:var(--r-low);color:var(--low);font-weight:700;}
+  code{background:#eef1f6;padding:1.5px 6px;border-radius:5px;font-size:.87em;color:#0f2557;
+    font-family:"Cascadia Code","Consolas",monospace;}
+  pre{background:var(--code-bg);color:var(--code-ink);padding:16px 18px;border-radius:10px;overflow-x:auto;
+    font-family:"Cascadia Code","Consolas",monospace;font-size:.82rem;line-height:1.5;margin:12px 0 20px;}
+  pre .c1{color:#8fd694}pre .c2{color:#ffb454}pre .c3{color:#ff6b6b}pre .c4{color:#7dd3fc}
+
+  figure{margin:18px 0;text-align:center;}
+  figure img{max-width:100%;border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 10px rgba(16,24,40,.08);}
+  figcaption{font-size:.83rem;color:var(--ink-soft);margin-top:8px;}
+  .shot-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media (max-width:640px){.shot-row{grid-template-columns:1fr}.cover-meta{grid-template-columns:repeat(2,1fr)}}
+
+  .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.78rem;font-weight:700;}
+  .badge.ok{background:#e7f6ec;color:var(--ok);}
+  .badge.crit{background:var(--r-crit);color:var(--crit);}
+  .badge.high{background:var(--r-high);color:var(--high);}
+  .badge.med{background:var(--r-med);color:var(--med);}
+  .badge.low{background:var(--r-low);color:var(--low);}
+
+  .callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0;}
+  .callout.warn{border-color:#d97706;background:#fff8ec;}
+  .callout.danger{border-color:#b91c1c;background:#fdeeee;}
+  .callout.ok{border-color:#15803d;background:#eefaf1;}
+  .callout b{display:block;margin-bottom:4px;}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0 22px;}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center;}
+  .stat .n{font-size:1.7rem;font-weight:800;color:#0f2557;}
+  .stat .l{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);margin-top:2px;}
+  @media (max-width:640px){.grid3{grid-template-columns:1fr 1fr}}
+
+  .toc{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:20px 26px;margin:0 0 30px;}
+  .toc h3{margin:0 0 10px;}
+  .toc ol{margin:0;padding-left:20px;columns:2;column-gap:30px;}
+  .toc li{margin-bottom:6px;font-size:.92rem;}
+  .toc a{color:var(--accent);text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+
+  footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:.82rem;text-align:center;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 20px;}
+  .chip{background:#eef2ff;color:#1d4ed8;border-radius:8px;padding:6px 12px;font-size:.83rem;font-weight:600;}
+
+  .barchart{display:flex;align-items:flex-end;gap:26px;height:180px;padding:10px 6px 0;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+  .bar{width:100%;max-width:70px;border-radius:6px 6px 0 0;position:relative;}
+  .bar .val{position:absolute;top:-22px;left:0;right:0;text-align:center;font-weight:800;font-size:.85rem;color:#0f2557;}
+  .bar-label{margin-top:8px;font-size:.8rem;color:var(--ink-soft);text-align:center;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="cover">
+    <span class="tag">TP Cybersécurité &amp; protection des données</span>
+    <h1>HelioMed — Exercice 1</h1>
+    <h2>Analyse de l'environnement de sécurité : actifs, menaces, risques et objectifs</h2>
+    <div class="cover-meta">
+      <div><b>Binôme</b><span>_À compléter_</span></div>
+      <div><b>Date</b><span>04 septembre 2026</span></div>
+      <div><b>Périmètre</b><span>Plateforme HelioMed</span></div>
+      <div><b>Labo</b><span>2 VM isolées + Docker</span></div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <h3>Sommaire</h3>
+    <ol>
+      <li><a href="#cadre">Cadre et architecture du labo</a></li>
+      <li><a href="#outils">Environnement — outils installés</a></li>
+      <li><a href="#cartographie">Cartographie du labo (Étape 1.1)</a></li>
+      <li><a href="#actifs">Registre des actifs et vulnérabilités (Étape 1.2)</a></li>
+      <li><a href="#stride">Menaces STRIDE et matrice de risque (Étape 1.3)</a></li>
+      <li><a href="#ebios">EBIOS Risk Manager (Étape 1.3)</a></li>
+      <li><a href="#objectifs">Objectifs de sécurité et choix des outils (Étape 1.4)</a></li>
+      <li><a href="#scans">Résultats détaillés des scans</a></li>
+      <li><a href="#preuves">Preuves visuelles de déploiement</a></li>
+      <li><a href="#incident">Incident rencontré et résolution</a></li>
+      <li><a href="#logbook">Journal de bord et part IA</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+    </ol>
+  </div>
+
+  <!-- ===================== 1. CADRE ===================== -->
+  <h2 class="section" id="cadre"><span class="num">1.</span>Cadre et architecture du labo</h2>
+  <p class="section-sub">HelioMed, PME éditant une plateforme de prise de RDV médicaux (Flask/Nginx/PostgreSQL,
+  2 serveurs Linux, données de santé RGPD). Le labo reproduit cette architecture avec OWASP Juice Shop
+  (interface patient) et DVWA (composant applicatif de test) comme cibles d'entraînement.</p>
+
+  <div class="card">
+    <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:'Segoe UI',sans-serif;">
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1d4ed8"/></marker>
+      </defs>
+      <rect x="10" y="20" width="880" height="260" rx="14" fill="#f1f5fb" stroke="#c9d6ee"/>
+      <text x="30" y="44" font-size="13" fill="#4b5563" font-weight="600">Réseau interne isolé « helio-lab » — 10.10.10.0/24</text>
+
+      <!-- host -->
+      <rect x="30" y="60" width="150" height="60" rx="8" fill="#fff" stroke="#94a3b8"/>
+      <text x="105" y="85" font-size="12" text-anchor="middle" fill="#334155" font-weight="700">Poste de travail</text>
+      <text x="105" y="103" font-size="10.5" text-anchor="middle" fill="#64748b">nmap / ZAP / Trivy</text>
+
+      <!-- frontal -->
+      <rect x="300" y="55" width="230" height="100" rx="10" fill="#fff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="415" y="80" font-size="13.5" text-anchor="middle" fill="#0f2557" font-weight="800">helio-frontal</text>
+      <text x="415" y="97" font-size="11" text-anchor="middle" fill="#334155">10.10.10.10 · Nginx 1.22.1</text>
+      <text x="415" y="113" font-size="10" text-anchor="middle" fill="#64748b">Reverse proxy — port 80</text>
+      <text x="415" y="128" font-size="10" text-anchor="middle" fill="#64748b">SSH 22 · (Samba 139/445 hérité)</text>
+
+      <!-- applicatif -->
+      <rect x="620" y="30" width="250" height="220" rx="10" fill="#fff" stroke="#0f2557" stroke-width="2"/>
+      <text x="745" y="54" font-size="13.5" text-anchor="middle" fill="#0f2557" font-weight="800">helio-applicatif</text>
+      <text x="745" y="70" font-size="11" text-anchor="middle" fill="#334155">10.10.10.20 · Docker</text>
+
+      <rect x="638" y="82" width="214" height="34" rx="6" fill="#eef2ff" stroke="#c7d2fe"/>
+      <text x="745" y="103" font-size="11" text-anchor="middle" fill="#1d4ed8" font-weight="700">Juice Shop — appli patient : 3000</text>
+
+      <rect x="638" y="124" width="214" height="34" rx="6" fill="#fff3e0" stroke="#fcd9a4"/>
+      <text x="745" y="145" font-size="11" text-anchor="middle" fill="#b45309" font-weight="700">DVWA — composant test : 8080</text>
+
+      <rect x="638" y="166" width="214" height="34" rx="6" fill="#fdeeee" stroke="#f6c6c6"/>
+      <text x="745" y="187" font-size="11" text-anchor="middle" fill="#b91c1c" font-weight="700">MySQL — BDD (santé sim.) : 3306</text>
+
+      <text x="745" y="222" font-size="10" text-anchor="middle" fill="#64748b">SSH 22 · (Samba 139/445 hérité)</text>
+      <text x="745" y="238" font-size="10" text-anchor="middle" fill="#64748b">NIC2 = interne · NIC1 = NAT (setup uniquement)</text>
+
+      <path d="M180 90 L296 90" stroke="#1d4ed8" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+      <text x="238" y="82" font-size="9.5" text-anchor="middle" fill="#1d4ed8">scans</text>
+
+      <path d="M530 105 L616 105" stroke="#0f2557" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+      <text x="573" y="97" font-size="9.5" text-anchor="middle" fill="#0f2557">proxy_pass</text>
+    </svg>
+  </div>
+
+  <div class="callout ok">
+    <b>Connectivité vérifiée</b>
+    Ping helio-frontal ↔ helio-applicatif : 4/4 paquets reçus, 0% de perte (2,4 – 5,0 ms).
+    Voir capture console §3 et <code>outputs/exercice1/preuve_vm_reseau.txt</code>.
+  </div>
+
+  <!-- ===================== 2. OUTILS ===================== -->
+  <h2 class="section" id="outils"><span class="num">2.</span>Environnement — outils installés</h2>
+  <p class="section-sub">Chaque installation est vérifiée par la commande de version correspondante.</p>
+  <table>
+    <thead><tr><th>Outil</th><th>Rôle</th><th>Version constatée</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td>VirtualBox</td><td>Hyperviseur des 2 VM labo</td><td><code>VBoxManage --version</code> → 7.2.2r170484</td><td><span class="badge ok">OK</span></td></tr>
+      <tr><td>Docker + Compose</td><td>Déploiement HelioMed (cibles)</td><td>Docker 29.4.0 (hôte) / 20.10.24 (VM) · Compose v5.1.2 (hôte) / 1.29.2 (VM)</td><td><span class="badge ok">OK</span></td></tr>
+      <tr><td>Git</td><td>Versionning projet</td><td><code>git --version</code> → 2.54.0.windows.1</td><td><span class="badge ok">OK</span></td></tr>
+      <tr><td>OWASP ZAP</td><td>Scan passif web (DAST)</td><td><code>2.17.0</code> (+ dépendance Temurin JRE 17.0.20)</td><td><span class="badge ok">OK</span></td></tr>
+      <tr><td>Nmap</td><td>Cartographie réseau</td><td>7.80 (poste de travail) / 7.93 (dans les VM)</td><td><span class="badge ok">OK</span></td></tr>
+      <tr><td>Trivy</td><td>Scan CVE images (SCA)</td><td><code>trivy --version</code> → 0.74.0</td><td><span class="badge ok">OK</span></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ===================== 3. CARTOGRAPHIE ===================== -->
+  <h2 class="section" id="cartographie"><span class="num">3.</span>Cartographie du labo — Étape 1.1</h2>
+  <p class="section-sub">Déploiement des 2 VM, découverte réseau, scan web passif et scan d'image — dans cet ordre.</p>
+
+  <div class="shot-row">
+    <figure>
+      <img src="assets/vm_frontal_console.png" alt="Console helio-frontal">
+      <figcaption>Console <code>helio-frontal</code> — VM démarrée, hostname appliqué.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/vm_applicatif_console.png" alt="Console helio-applicatif">
+      <figcaption>Console <code>helio-applicatif</code> — VM démarrée, hostname appliqué.</figcaption>
+    </figure>
+  </div>
+
+  <h3>Découverte réseau — <code>nmap -sV -sC 10.10.10.0/24</code></h3>
+  <pre><span class="c1">Nmap scan report for 10.10.10.10</span>
+Host is up (0.0027s latency).
+PORT    STATE SERVICE     VERSION
+22/tcp  open  ssh         OpenSSH 9.2p1 Debian 2+deb12u10
+80/tcp  open  http        nginx 1.22.1
+<span class="c2">|_http-title: OWASP Juice Shop</span>
+139/tcp open  netbios-ssn Samba smbd 4.6.2   <span class="c3">← exposé inutilement (hérité du clonage)</span>
+445/tcp open  netbios-ssn Samba smbd 4.6.2
+
+<span class="c1">Nmap scan report for 10.10.10.20</span>
+Host is up (0.000018s latency).
+PORT     STATE    SERVICE     VERSION
+22/tcp   open     ssh         OpenSSH 9.2p1 Debian 2+deb12u10
+139/tcp  open     netbios-ssn Samba smbd 4.6.2
+445/tcp  open     netbios-ssn Samba smbd 4.6.2
+3000/tcp filtered ppp          <span class="c4">(scan sur soi-même via Docker — confirmé "open" depuis helio-frontal)</span>
+8080/tcp filtered http-proxy
+
+<span class="c3">Post-scan script results:
+| ssh-hostkey: Possible duplicate hosts
+|   Key 256 ED25519 used by: 10.10.10.10 AND 10.10.10.20
+|_  Key 256 ECDSA  used by: 10.10.10.10 AND 10.10.10.20</span>  ← découverte majeure, voir §4</pre>
+
+  <div class="callout warn">
+    <b>Découverte inattendue la plus significative</b>
+    Les deux VM, clonées depuis une même image de base sans régénération des clés, partagent
+    des <b>clés hôte SSH identiques</b>. Un poste positionné sur le réseau interne pourrait usurper
+    l'un des deux serveurs sans déclencher d'alerte « clé inconnue » côté client SSH.
+  </div>
+
+  <h3>Scan passif OWASP ZAP</h3>
+  <p>Spider (crawl) puis observation passive uniquement — aucune requête d'attaque envoyée,
+  cible atteinte via redirection NAT (<code>host:8888 → helio-frontal:80</code>).</p>
+  <div class="grid3">
+    <div class="stat"><div class="n" style="color:var(--crit)">0</div><div class="l">High</div></div>
+    <div class="stat"><div class="n" style="color:var(--high)">116</div><div class="l">Medium</div></div>
+    <div class="stat"><div class="n" style="color:var(--low)">160</div><div class="l">Low</div></div>
+    <div class="stat"><div class="n" style="color:var(--info)">43</div><div class="l">Informational</div></div>
+  </div>
+
+  <h3>Scan Trivy — images applicatives</h3>
+  <p>Voir le détail complet et le contournement méthodologique employé en <a href="#scans">§8</a> et <a href="#incident">§10</a>.</p>
+
+  <!-- ===================== 4. ACTIFS ===================== -->
+  <h2 class="section" id="actifs"><span class="num">4.</span>Registre des actifs et vulnérabilités — Étape 1.2</h2>
+  <p class="section-sub">Construit à partir des découvertes réelles ci-dessus, pas d'une liste générique.
+  Sensibilité RGPD : les données de santé sont classées critiques par défaut.</p>
+  <table>
+    <thead><tr><th>Actif</th><th>Type</th><th>Sensibilité</th><th>Vulnérabilité constatée</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>Reverse proxy Nginx (helio-frontal)</td><td>Infrastructure</td><td>Moyenne</td>
+        <td>Port 80 non chiffré (HTTP) ; bannière serveur visible</td><td>nmap/ZAP</td></tr>
+      <tr><td>Application patient (Juice Shop)</td><td>Application</td><td class="high">Élevée</td>
+        <td>CSP absent, CORS permissif (<code>Access-Control-Allow-Origin: *</code>), en-têtes manquants</td><td>ZAP</td></tr>
+      <tr><td>Composant applicatif de test (DVWA)</td><td>Application</td><td class="crit">Critique</td>
+        <td>Appli volontairement vulnérable exposée sur le réseau interne (Apache 2.4.25)</td><td>nmap</td></tr>
+      <tr><td>BDD (MySQL, données santé simulées)</td><td>Donnée</td><td class="crit">Critique (santé)</td>
+        <td>Mot de passe root en clair dans <code>docker-compose.yml</code></td><td>Trivy / revue</td></tr>
+      <tr><td>VM helio-frontal</td><td>Infrastructure</td><td>Moyenne</td>
+        <td>Samba exposé inutilement ; clé SSH <b>dupliquée</b> avec helio-applicatif</td><td>nmap</td></tr>
+      <tr><td>VM helio-applicatif/BDD</td><td>Infrastructure</td><td class="crit">Critique</td>
+        <td>Idem : Samba exposé ; clé SSH <b>dupliquée</b> (risque MITM/spoofing indétectable)</td><td>nmap</td></tr>
+      <tr><td>Image Juice Shop</td><td>Application</td><td class="high">Élevée</td>
+        <td>50 CVE (8 CRITICAL, 42 HIGH) dont crypto-js CVE-2023-46233</td><td>Trivy</td></tr>
+      <tr><td>Image DVWA</td><td>Application</td><td class="crit">Critique</td>
+        <td><b>805 CVE</b> (254 CRITICAL, 551 HIGH) — base Debian 9/Apache obsolète</td><td>Trivy</td></tr>
+      <tr><td>Image MySQL 5.7</td><td>Donnée</td><td class="crit">Critique (santé)</td>
+        <td>~102 CVE cumulées (OS, Python, runc embarqués)</td><td>Trivy</td></tr>
+      <tr><td>Dépôt Git</td><td>Donnée</td><td class="high">Élevée</td>
+        <td>Mot de passe MySQL en clair commité dans <code>infra/docker-compose.yml</code></td><td>Revue manuelle</td></tr>
+      <tr><td>Comptes d'accès télétravail (SSH/VBoxManage)</td><td>Identité</td><td class="high">Élevée</td>
+        <td>Mot de passe root/admintp partagé sur toutes les VM clonées, pas de rotation</td><td>Revue manuelle</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ===================== 5. STRIDE ===================== -->
+  <h2 class="section" id="stride"><span class="num">5.</span>Menaces STRIDE et matrice de risque — Étape 1.3</h2>
+  <table>
+    <thead><tr><th>Menace (STRIDE)</th><th>Actif visé</th><th>Vraisemb.</th><th>Impact</th><th>Risque</th><th>Traitement</th></tr></thead>
+    <tbody>
+      <tr><td>Information disclosure</td><td>BDD santé (MySQL)</td><td>3</td><td>4</td><td class="crit">12 — Élevé</td>
+        <td>Chiffrement au repos + secret manager (retirer mot de passe en clair)</td></tr>
+      <tr><td>Spoofing</td><td>VM (clés SSH dupliquées)</td><td>3</td><td>3</td><td class="high">9 — Élevé</td>
+        <td>Régénérer les clés SSH après tout clonage (<code>ssh-keygen -A</code>)</td></tr>
+      <tr><td>Tampering</td><td>Appli patient (CSP absent)</td><td>3</td><td>3</td><td class="high">9 — Élevé</td>
+        <td>Ajouter en-têtes de sécurité au niveau Nginx (CSP, HSTS, X-Frame-Options)</td></tr>
+      <tr><td>Elevation of privilege</td><td>DVWA exposé</td><td>3</td><td>4</td><td class="crit">12 — Élevé</td>
+        <td>Isolation stricte du segment applicatif, jamais exposé hors réseau interne</td></tr>
+      <tr><td>Denial of service</td><td>Samba exposé inutilement</td><td>2</td><td>3</td><td class="med">6 — Moyen</td>
+        <td>Désinstaller Samba (hérité, non nécessaire à HelioMed)</td></tr>
+      <tr><td>Repudiation</td><td>Logs Nginx non centralisés</td><td>2</td><td>3</td><td class="med">6 — Moyen</td>
+        <td>Centraliser les logs (Wazuh, exercices suivants)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Matrice Vraisemblance × Impact</h3>
+  <table style="max-width:480px">
+    <thead><tr><th></th><th>Impact 1</th><th>Impact 2</th><th>Impact 3</th><th>Impact 4</th></tr></thead>
+    <tbody>
+      <tr><td><b>Vraisemb. 4</b></td><td class="low">4</td><td class="med">8</td><td class="high">12</td><td class="crit">16</td></tr>
+      <tr><td><b>Vraisemb. 3</b></td><td class="low">3</td><td class="med">6</td><td class="high">9</td><td class="crit">12</td></tr>
+      <tr><td><b>Vraisemb. 2</b></td><td class="low">2</td><td class="low">4</td><td class="med">6</td><td class="high">8</td></tr>
+      <tr><td><b>Vraisemb. 1</b></td><td class="low">1</td><td class="low">2</td><td class="low">3</td><td class="med">4</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:.85rem;color:var(--ink-soft)">Seuils : 1-4 Faible · 5-8 Moyen · 9-12 Élevé · 13-16 Critique.</p>
+
+  <!-- ===================== 6. EBIOS ===================== -->
+  <h2 class="section" id="ebios"><span class="num">6.</span>EBIOS Risk Manager (ANSSI) — Étape 1.3</h2>
+  <h3>Sources de risque</h3>
+  <table>
+    <thead><tr><th>Source</th><th>Motivation</th><th>Ressources/capacités</th></tr></thead>
+    <tbody>
+      <tr><td>Cybercriminel opportuniste</td><td>Gain financier (revente données santé, rançongiciel)</td><td>Automatisé, scanners connus</td></tr>
+      <tr><td>Acteur ciblé (concurrent)</td><td>Espionnage, déstabilisation</td><td>Ciblé, compétences moyennes/élevées</td></tr>
+      <tr><td>Interne négligent/malveillant</td><td>Erreur, vengeance, revente d'accès</td><td>Accès légitime, télétravail</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Scénarios stratégiques</h3>
+  <div class="card">
+    <b>1. Vol de données de santé via compromission de la BDD</b>
+    <p style="margin:6px 0 16px">Cybercriminel opportuniste → BDD (données patients) → exploitation d'une CVE image non patchée
+    (Trivy) ou d'une faille de configuration (ZAP) sur l'appli patient → pivot applicatif → exfiltration.</p>
+    <b>2. Rançongiciel via poste de développeur en télétravail</b>
+    <p style="margin:6px 0 16px">Cybercriminel opportuniste → disponibilité plateforme → phishing développeur → accès Git/déploiement compromis → charge malveillante.</p>
+    <b>3. Abus d'accès interne par un prestataire</b>
+    <p style="margin:6px 0 16px">Interne négligent/malveillant → confidentialité données patients → accès légitime mal cloisonné → export massif.</p>
+    <b>4. Usurpation d'un serveur HelioMed via clé SSH clonée <span class="badge ok" style="margin-left:6px">constaté, pas théorique</span></b>
+    <p style="margin:6px 0 0">nmap révèle que les deux serveurs partagent la même clé hôte SSH (clonage sans régénération) →
+    un attaquant interne peut usurper l'un des deux sans alerte client → MITM ou redirection de trafic admin.</p>
+  </div>
+
+  <!-- ===================== 7. OBJECTIFS ===================== -->
+  <h2 class="section" id="objectifs"><span class="num">7.</span>Objectifs de sécurité et choix des outils — Étape 1.4</h2>
+  <table>
+    <thead><tr><th>#</th><th>Objectif mesurable</th><th>Critère DICP</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Aucun service exposé sans authentification (0 endpoint public non protégé — ZAP)</td><td>Confidentialité</td></tr>
+      <tr><td>2</td><td>100% des données de santé chiffrées au repos (BDD + sauvegardes)</td><td>Confidentialité</td></tr>
+      <tr><td>3</td><td>0 CVE critique/haute non corrigée depuis &gt; 30 jours sur les images en prod (Trivy)</td><td>Intégrité</td></tr>
+      <tr><td>4</td><td>Disponibilité API ≥ 99% mesurée sur le mois (protection anti-DoS sur le frontal)</td><td>Disponibilité</td></tr>
+      <tr><td>5</td><td>100% des accès admin/déploiement tracés et attribuables, pas de compte partagé</td><td>Preuve/traçabilité</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Pourquoi ces outils, sur ce périmètre</h3>
+  <div class="card">
+    <p><b>Nmap</b> — a révélé un risque d'infrastructure (clés SSH dupliquées, Samba superflu) invisible aux
+    scanners applicatifs : indispensable en amont de tout scan ciblé.</p>
+    <p><b>OWASP ZAP</b> (passif) — adapté à l'interface patient : détecte les failles de configuration HTTP
+    sans risquer de perturber un service manipulant potentiellement des données de santé. A remonté
+    116 alertes Medium directement exploitables.</p>
+    <p><b>Trivy</b> — HelioMed est conteneurisé : les CVE dans les dépendances sont un risque direct invisible
+    sans SCA. Complète ZAP en couvrant la chaîne d'approvisionnement logicielle.</p>
+    <p style="margin-bottom:0"><b>Non retenus pour cette étape</b> — Nikto (redondant avec ZAP, moins adapté aux SPA) et
+    Burp Suite (usage manuel, moins reproductible pour une preuve automatisée).</p>
+  </div>
+
+  <!-- ===================== 8. SCANS DÉTAILLÉS ===================== -->
+  <h2 class="section" id="scans"><span class="num">8.</span>Résultats détaillés des scans</h2>
+
+  <h3>CVE critiques/hautes par image (Trivy)</h3>
+  <div class="card">
+    <div class="barchart">
+      <div class="bar-col">
+        <div class="bar" style="height:50px;background:linear-gradient(180deg,#fca5a5,#ef4444)"><span class="val">50</span></div>
+        <div class="bar-label">Juice Shop<br>8 CRIT · 42 HIGH</div>
+      </div>
+      <div class="bar-col">
+        <div class="bar" style="height:170px;background:linear-gradient(180deg,#7f1d1d,#450a0a)"><span class="val">805</span></div>
+        <div class="bar-label">DVWA<br>254 CRIT · 551 HIGH</div>
+      </div>
+      <div class="bar-col">
+        <div class="bar" style="height:65px;background:linear-gradient(180deg,#fdba74,#ea580c)"><span class="val">102</span></div>
+        <div class="bar-label">MySQL 5.7<br>4 CRIT · 98 HIGH</div>
+      </div>
+    </div>
+  </div>
+  <p>Détail complet dans <code>outputs/exercice1/trivy_juiceshop.txt</code>, <code>trivy_dvwa.txt</code>, <code>trivy_mysql.txt</code>.
+  Exemple représentatif :</p>
+  <pre>Node.js (node-pkg)
+Total: 49 (HIGH: 41, CRITICAL: 8)
+<span class="c3">crypto-js (package.json)   CVE-2023-46233  CRITICAL  3.3.0 → 4.2.0</span>
+  PBKDF2 1,000 times weaker than specified in 1993 and 1.3M times weaker than current standard
+
+apache2 (DVWA, base Debian 9)
+<span class="c3">CVE-2019-10082  CRITICAL  2.4.25-3+deb9u5 → 2.4.25-3+deb9u8</span>
+  httpd: read-after-free in h2 connection shutdown</pre>
+
+  <h3>Alertes ZAP par sévérité</h3>
+  <div class="card">
+    <div class="barchart">
+      <div class="bar-col"><div class="bar" style="height:4px;background:#b91c1c"><span class="val">0</span></div><div class="bar-label">High</div></div>
+      <div class="bar-col"><div class="bar" style="height:120px;background:#d97706"><span class="val">116</span></div><div class="bar-label">Medium</div></div>
+      <div class="bar-col"><div class="bar" style="height:164px;background:#2563a8"><span class="val">160</span></div><div class="bar-label">Low</div></div>
+      <div class="bar-col"><div class="bar" style="height:44px;background:#6b7280"><span class="val">43</span></div><div class="bar-label">Info</div></div>
+    </div>
+  </div>
+  <p>Rapport complet : <code>outputs/exercice1/zap_report.html</code> · JSON brut : <code>zap_alerts.json</code>.</p>
+
+  <!-- ===================== 9. PREUVES ===================== -->
+  <h2 class="section" id="preuves"><span class="num">9.</span>Preuves visuelles de déploiement</h2>
+  <p class="section-sub">Applications réellement accessibles via <code>helio-frontal</code> → reverse proxy Nginx → <code>helio-applicatif</code> (Docker), capturées en conditions réelles depuis le poste de travail.</p>
+  <div class="shot-row">
+    <figure>
+      <img src="assets/app_juiceshop_via_proxy.png" alt="Juice Shop via proxy">
+      <figcaption><code>http://localhost:8888/</code> → proxy_pass → Juice Shop (10.10.10.20:3000). HTTP 200.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/app_dvwa_via_proxy.png" alt="DVWA via proxy">
+      <figcaption><code>http://localhost:8888/dvwa/</code> → proxy_pass → DVWA (10.10.10.20:8080). HTTP 302→login.</figcaption>
+    </figure>
+  </div>
+  <div class="chip-row">
+    <span class="chip">curl localhost/ → HTTP 200</span>
+    <span class="chip">curl localhost/dvwa/ → HTTP 302</span>
+    <span class="chip">docker ps → 3 conteneurs Up</span>
+    <span class="chip">ports 3000/8080 LISTEN 0.0.0.0</span>
+  </div>
+
+  <!-- ===================== 10. INCIDENT ===================== -->
+  <h2 class="section" id="incident"><span class="num">10.</span>Incident rencontré et résolution</h2>
+  <p class="section-sub">Documenté ici en détail car il illustre une compétence transférable : le diagnostic de cause racine.</p>
+
+  <figure>
+    <img src="assets/incident_kernel_panic.png" alt="Kernel panic sur helio-applicatif" style="max-width:520px">
+    <figcaption>Kernel panic réel capturé sur la console de <code>helio-applicatif</code> pendant l'installation de Docker.</figcaption>
+  </figure>
+
+  <div class="callout danger">
+    <b>Symptôme</b>
+    Pendant <code>apt-get install docker.io</code>, le noyau de <code>helio-applicatif</code> a paniqué
+    (« Fatal exception in interrupt »). Après redémarrage, les VM se sont mises en pause de façon répétée.
+  </div>
+  <div class="callout warn">
+    <b>Fausse piste initiale</b>
+    Diagnostic orienté à tort vers un manque de RAM/CPU (VM à 1 vCPU/1,5 Go) — l'augmentation des ressources
+    (2 vCPU/2 Go) n'a pas résolu le problème, seulement déplacé le symptôme (pauses au lieu de panic).
+  </div>
+  <div class="callout ok">
+    <b>Cause racine réelle</b>
+    Le disque C: de l'hôte était à <b>0 octet libre</b> (475 Go utilisés). Les écritures sur le disque virtuel
+    (.vdi) de la VM échouaient silencieusement pendant l'extraction des paquets Docker, provoquant le panic.
+    Correction : suppression de 3 dossiers de VM orphelins non enregistrés dans VirtualBox
+    (<code>Win client</code> 17,8 Go, <code>debian</code> 8 Go, <code>PFsense</code> 0 Go) → 25,75 Go libérés.
+    Nouvelle tentative : succès immédiat, aucun crash.
+  </div>
+  <div class="callout">
+    <b>Second symptôme du même type (Trivy)</b>
+    Le scan Trivy de l'image Juice Shop timeout après 10, puis 20, puis 40 minutes depuis l'hôte Windows,
+    alors que réseau et disque étaient sains. Cause probable : interception par l'antivirus Windows Defender
+    lors de l'extraction de milliers de petits fichiers <code>node_modules</code> (paramètre système que je n'ai
+    pas la permission de modifier). Contournement : installation de Trivy directement dans <code>helio-applicatif</code>
+    et scan des images déjà présentes localement — résultat en moins de 3 minutes.
+  </div>
+
+  <!-- ===================== 11. LOGBOOK ===================== -->
+  <h2 class="section" id="logbook"><span class="num">11.</span>Journal de bord et part IA</h2>
+  <p class="section-sub">Journal complet : <code>docs/logbook.md</code>. Synthèse ci-dessous.</p>
+  <table>
+    <thead><tr><th>Étape</th><th>Résultat</th></tr></thead>
+    <tbody>
+      <tr><td>Installation VirtualBox, Nmap, Trivy, ZAP</td><td>✅ OK</td></tr>
+      <tr><td>Création VM (ISO Debian netinst)</td><td>❌ Saturation mémoire hôte → abandonné</td></tr>
+      <tr><td>Clonage depuis VM socle (UBU-BASE) + réseau interne</td><td>✅ OK, ping 0% perte</td></tr>
+      <tr><td>Déploiement Docker + Juice Shop/DVWA/MySQL</td><td>❌ Kernel panic → ✅ corrigé (disque hôte)</td></tr>
+      <tr><td>Reverse proxy Nginx</td><td>✅ HTTP 200 / 302 via proxy</td></tr>
+      <tr><td>nmap -sV -sC sur 10.10.10.0/24</td><td>✅ clés SSH dupliquées découvertes</td></tr>
+      <tr><td>Scan passif ZAP</td><td>✅ 319 alertes</td></tr>
+      <tr><td>Scan Trivy (3 images)</td><td>❌ timeout hôte → ✅ corrigé (scan local VM)</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>Part IA</b>
+    La quasi-totalité de la mise en œuvre technique (VM, réseau, déploiement, scans, diagnostic des 2 incidents)
+    a été réalisée avec Claude Code en pilotage direct (VBoxManage, guestcontrol, docker-compose), sous
+    supervision et validation du binôme à chaque étape sensible (suppression de fichiers, choix d'architecture,
+    bascule ISO→clonage). L'analyse (STRIDE, EBIOS, registre d'actifs, objectifs) a été construite à partir
+    des résultats réels des scans, pas de contenu générique.
+  </div>
+
+  <!-- ===================== 12. CONCLUSION ===================== -->
+  <h2 class="section" id="conclusion"><span class="num">12.</span>Conclusion</h2>
+  <p>L'analyse de l'environnement HelioMed révèle un profil de risque cohérent avec une plateforme
+  jeune et rapidement déployée : la surface applicative (DVWA en particulier, 805 CVE) et les défauts
+  de configuration réseau/infrastructure (clés SSH dupliquées, Samba superflu) constituent les points
+  d'attention prioritaires, avant même les vulnérabilités applicatives classiques détectées par ZAP.
+  Les 5 objectifs de sécurité formulés (§7) adressent directement ces constats et serviront de fil
+  conducteur aux exercices suivants du TP.</p>
+
+  <footer>
+    Rapport généré dans le cadre du TP Cybersécurité &amp; protection des données — HelioMed · Exercice 1<br>
+    Fichiers de preuve bruts disponibles dans <code>outputs/exercice1/</code>
+  </footer>
+
+</div>
+</body>
+</html>
