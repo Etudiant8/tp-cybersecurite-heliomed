@@ -42,7 +42,7 @@
           <mxGeometry x="785" y="400" width="210" height="105" as="geometry" />
         </mxCell>
 
-        <mxCell id="backup" value="Sauvegardes&#10;chiffrees, hors site&#10;RPO <= 24h" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#94A3B8;fillColor=#FFFFFF;" vertex="1" parent="1">
+        <mxCell id="backup" value="Sauvegardes&#10;chiffrees, hors site&#10;RPO &lt;= 24h" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#94A3B8;fillColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="1040" y="405" width="130" height="60" as="geometry" />
         </mxCell>
 
