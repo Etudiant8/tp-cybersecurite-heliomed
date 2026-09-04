@@ -1,0 +1,14 @@
+# Secrets / credentials
+*.pem
+*.key
+.env
+**/secrets/
+
+# VirtualBox
+*.vdi
+*.vbox
+*.vbox-prev
+
+# OS
+Thumbs.db
+.DS_Store

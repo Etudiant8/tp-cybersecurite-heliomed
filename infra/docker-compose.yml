@@ -1,0 +1,41 @@
+version: "3.8"
+
+# Cibles d'entraînement représentant les composants d'HelioMed
+# (frontal web -> Juice Shop, applicatif vulnérable -> DVWA + sa BDD MySQL)
+# Réseau isolé dédié : helio_lab
+
+services:
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    container_name: helio-frontal-juiceshop
+    ports:
+      - "3000:3000"
+    networks:
+      - helio_lab
+    restart: unless-stopped
+
+  dvwa:
+    image: vulnerables/web-dvwa:latest
+    container_name: helio-applicatif-dvwa
+    ports:
+      - "8080:80"
+    networks:
+      - helio_lab
+    restart: unless-stopped
+    depends_on:
+      - dvwa-db
+
+  dvwa-db:
+    image: mysql:5.7
+    container_name: helio-bdd
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme_lab_only
+      MYSQL_DATABASE: dvwa
+    networks:
+      - helio_lab
+    restart: unless-stopped
+
+networks:
+  helio_lab:
+    driver: bridge
+    internal: false  # passer à true une fois les scans terminés pour un vrai isolement
