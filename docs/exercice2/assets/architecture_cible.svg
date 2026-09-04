@@ -1,9 +1,9 @@
-<svg viewBox="0 0 1200 780" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1d4ed8"/></marker>
     <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#b91c1c"/></marker>
   </defs>
-  <rect width="1200" height="780" fill="#f7f8fa"/>
+  <rect width="1200" height="800" fill="#f7f8fa"/>
   <text x="20" y="30" font-size="20" font-weight="800" fill="#0f2557">HelioMed — Architecture de sécurité cible (Étape 2.3)</text>
   <text x="20" y="50" font-size="12" fill="#64748b">Labo helio-lab — segmentation en 3 zones, IP réelles des VM (helio-frontal 10.10.10.10, helio-applicatif 10.10.10.20)</text>
 
@@ -99,7 +99,7 @@
   <path d="M225 160 L225 500 L420 585" stroke="#15803d" stroke-width="1.5" fill="none" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
 
   <!-- Legend -->
-  <rect x="20" y="680" width="1160" height="85" rx="8" fill="#fff" stroke="#dfe3e9"/>
+  <rect x="20" y="680" width="1160" height="105" rx="8" fill="#fff" stroke="#dfe3e9"/>
   <text x="35" y="700" font-size="11" font-weight="700" fill="#0f2557">Légende</text>
   <line x1="35" y1="715" x2="65" y2="715" stroke="#1d4ed8" stroke-width="2" marker-end="url(#arrow)"/>
   <text x="72" y="719" font-size="9.5" fill="#334155">Flux applicatif autorisé (allow-list pare-feu)</text>
@@ -107,6 +107,7 @@
   <text x="372" y="719" font-size="9.5" fill="#334155">Flux de logs vers le SIEM</text>
   <rect x="600" y="708" width="16" height="14" fill="#fee2e2" stroke="#b91c1c"/>
   <text x="622" y="719" font-size="9.5" fill="#334155">Emplacement d'un chiffrement (repos ou transit)</text>
-  <text x="35" y="740" font-size="9.5" fill="#64748b">Écart avec l'état actuel (Ex.1) : la BDD est aujourd'hui colocalisée avec l'appli sans réseau Docker dédié ni pare-feu interne #2 — cible Ex.3.</text>
-  <text x="35" y="753" font-size="9.5" fill="#64748b">Le canal frontal↔applicatif est aujourd'hui en HTTP clair (constaté Ex.1) — la cible impose TLS de bout en bout, y compris interne.</text>
+  <text x="35" y="737" font-size="9.2" fill="#b91c1c" font-weight="700">Écart le plus important (Ex.1) : les 2 VM sont aujourd'hui sur un seul sous-réseau plat 10.10.10.0/24, sans VLAN ni pare-feu entre elles — la séparation DMZ/applicative dessinée ici n'existe qu'au niveau applicatif (Nginx), pas encore au niveau réseau.</text>
+  <text x="35" y="751" font-size="9.5" fill="#64748b">La BDD est aujourd'hui colocalisée avec l'appli sans réseau Docker dédié ni pare-feu interne #2 — cible Ex.3.</text>
+  <text x="35" y="765" font-size="9.5" fill="#64748b">Le canal frontal↔applicatif est aujourd'hui en HTTP clair (constaté Ex.1) — la cible impose TLS de bout en bout, y compris interne.</text>
 </svg>

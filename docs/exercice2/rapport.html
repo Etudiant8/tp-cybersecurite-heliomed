@@ -113,25 +113,27 @@
 
   <h2 class="h"><span class="num">1.</span>Mesures de sécurité — Étape 2.1</h2>
   <p style="font-size:8.4pt">15 mesures (minimum 12 requis), reliées à un contrôle ISO/IEC 27002:2022 <b>et</b> à une
-  règle du guide d'hygiène ANSSI. <span class="badge ok">[Ex.1]</span> = corrige directement une faille réelle constatée en Ex.1.</p>
+  règle du guide d'hygiène ANSSI. <span class="badge ok">[Ex.1]</span> = corrige directement une faille réelle constatée en Ex.1.
+  Numéros ANSSI <b>vérifiés</b> contre le contenu réel du guide (une relecture sévère a détecté que la version
+  initiale citait des numéros de mémoire, parfois faux — détail : <code>plan_securite.md</code>).</p>
   <table>
     <thead><tr><th>#</th><th>Mesure</th><th>ISO 27002:2022</th><th>ANSSI</th></tr></thead>
     <tbody>
-      <tr><td>1</td><td>MFA sur tous les accès admin (GitHub, VPN, bastion)</td><td>5.17 · 8.5</td><td>R8</td></tr>
+      <tr><td>1</td><td>MFA sur tous les accès admin (GitHub, VPN, bastion)</td><td>5.17 · 8.5</td><td>R9-10</td></tr>
       <tr><td>2</td><td>Clés SSH individuelles, jamais de compte partagé <span class="badge ok">Ex.1</span></td><td>5.16 · 8.2</td><td>R8</td></tr>
-      <tr><td>3</td><td>Régénération des secrets après clonage de VM <span class="badge ok">Ex.1</span></td><td>8.9 · 8.24</td><td>R15</td></tr>
-      <tr><td>4</td><td>Segmentation réseau 3 zones (DMZ/appli/données)</td><td>8.22 · 8.20</td><td>R15-17</td></tr>
-      <tr><td>5</td><td>Pare-feu à règles explicites, allow-list</td><td>8.20 · 8.21</td><td>R18-19</td></tr>
-      <tr><td>6</td><td>Chiffrement des données de santé au repos</td><td>8.24</td><td>R13</td></tr>
-      <tr><td>7</td><td>Chiffrement en transit TLS, y compris interne</td><td>8.24 · 5.14</td><td>R13</td></tr>
-      <tr><td>8</td><td>Gestionnaire de secrets, fin des mdp en clair <span class="badge ok">Ex.1</span></td><td>8.24 · 5.17</td><td>R5</td></tr>
-      <tr><td>9</td><td>Rotation des secrets (90j / immédiate si fuite) <span class="badge ok">Ex.1</span></td><td>8.24 · 5.18</td><td>R5, R8</td></tr>
-      <tr><td>10</td><td>Journalisation centralisée vers SIEM</td><td>8.15 · 8.16</td><td>R33-35</td></tr>
-      <tr><td>11</td><td>Sauvegardes chiffrées et testées (RPO ≤24h)</td><td>8.13</td><td>R37</td></tr>
-      <tr><td>12</td><td>Durcissement — services inutiles supprimés <span class="badge ok">Ex.1</span></td><td>8.9 · 8.8</td><td>R9-11</td></tr>
-      <tr><td>13</td><td>Gestion des correctifs (patch mgmt, délai max)</td><td>8.8</td><td>R12</td></tr>
-      <tr><td>14</td><td>Sécurité applicative OWASP Top 10 <span class="badge ok">Ex.1</span></td><td>8.26 · 8.28</td><td>R39-41</td></tr>
-      <tr><td>15</td><td>Scan SCA/DAST intégré au pipeline CI/CD</td><td>8.29 · 8.8</td><td>R41</td></tr>
+      <tr><td>3</td><td>Régénération des secrets après clonage de VM <span class="badge ok">Ex.1</span></td><td>8.9 · 8.24</td><td>R12</td></tr>
+      <tr><td>4</td><td>Segmentation réseau 3 zones (DMZ/appli/données)</td><td>8.22 · 8.20</td><td>R21</td></tr>
+      <tr><td>5</td><td>Pare-feu à règles explicites, allow-list</td><td>8.20 · 8.21</td><td>R4, R21</td></tr>
+      <tr><td>6</td><td>Chiffrement des données de santé au repos</td><td>8.24</td><td>R31</td></tr>
+      <tr><td>7</td><td>Chiffrement en transit TLS, y compris interne</td><td>8.24 · 5.14</td><td>R23</td></tr>
+      <tr><td>8</td><td>Gestionnaire de secrets, fin des mdp en clair <span class="badge ok">Ex.1</span></td><td>8.24 · 5.17</td><td>R9</td></tr>
+      <tr><td>9</td><td>Rotation des secrets (90j / immédiate si fuite) <span class="badge ok">Ex.1</span></td><td>8.24 · 5.18</td><td>R12</td></tr>
+      <tr><td>10</td><td>Journalisation centralisée vers SIEM</td><td>8.15 · 8.16</td><td>R26-27</td></tr>
+      <tr><td>11</td><td>Sauvegardes chiffrées et testées (RPO ≤24h)</td><td>8.13</td><td>R36</td></tr>
+      <tr><td>12</td><td>Durcissement — services inutiles supprimés <span class="badge ok">Ex.1</span></td><td>8.9 · 8.8</td><td>R14</td></tr>
+      <tr><td>13</td><td>Gestion des correctifs (patch mgmt, délai max)</td><td>8.8</td><td>R6-7</td></tr>
+      <tr><td>14</td><td>Sécurité applicative OWASP Top 10 <span class="badge ok">Ex.1</span></td><td>8.26 · 8.28</td><td>R23</td></tr>
+      <tr><td>15</td><td>Scan SCA/DAST intégré au pipeline CI/CD</td><td>8.29 · 8.8</td><td>R40</td></tr>
     </tbody>
   </table>
   <p style="font-size:7.6pt;color:var(--ink-soft)">Détail complet : <code>docs/exercice2/plan_securite.md</code>.</p>
@@ -191,9 +193,10 @@
 
   <figure><img src="assets/architecture_cible.png" alt="Architecture cible HelioMed" style="border:1px solid var(--line)"></figure>
 
-  <div class="callout warn"><b>Écarts assumés avec l'état actuel (Ex.1)</b>
-  La BDD est aujourd'hui colocalisée avec l'appli sans réseau Docker dédié ni pare-feu interne #2 ;
-  le canal frontal↔applicatif est en HTTP clair. Ces deux écarts sont la cible prioritaire de l'Ex.3.</div>
+  <div class="callout danger"><b>Écart le plus important, assumé sans le minimiser</b>
+  Les 2 VM sont aujourd'hui sur un <b>seul sous-réseau plat 10.10.10.0/24</b>, sans VLAN ni pare-feu entre elles —
+  la séparation DMZ/applicative n'existe qu'au niveau applicatif (Nginx), pas encore au niveau réseau. La BDD est
+  colocalisée sans réseau Docker dédié ; le canal frontal↔applicatif est en HTTP clair. Ces 3 écarts sont la cible Ex.3.</div>
 
   <div class="page-foot"><span>HelioMed — TP Cybersécurité</span><span>Page 3 / 6</span></div>
 </div>
