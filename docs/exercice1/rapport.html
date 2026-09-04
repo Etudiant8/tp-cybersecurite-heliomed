@@ -245,6 +245,7 @@
   </table>
 
   <h2 class="h"><span class="num">5.</span>Menaces STRIDE — Étape 1.3</h2>
+  <p style="font-size:7.3pt;color:var(--ink-soft);margin:0 0 3px">Grille : V — 1 inaccessible avec nos constats · 2 nécessite une étape non observée · 3 réalisable avec les moyens déjà constatés par nos scans · 4 trivial/déjà exploité. I — 1 gêne mineure · 2 dégradation limitée · 3 perte confid./intégrité ou service public down · 4 données de santé exposées ou arrêt total. Justification détaillée par ligne : <code>stride_risques.md</code>.</p>
   <table>
     <thead><tr><th>Menace</th><th>Actif visé</th><th>V</th><th>I</th><th>Risque</th><th>Traitement</th></tr></thead>
     <tbody>
@@ -295,15 +296,16 @@
 
   <h2 class="h"><span class="num">7.</span>Objectifs de sécurité et choix des outils — Étape 1.4</h2>
   <table>
-    <thead><tr><th>#</th><th>Objectif mesurable</th><th>DICP</th></tr></thead>
+    <thead><tr><th>#</th><th>Objectif mesurable</th><th>DICP</th><th>Risque STRIDE couvert</th></tr></thead>
     <tbody>
-      <tr><td>1</td><td>Aucun service exposé sans authentification (0 endpoint non protégé — ZAP)</td><td>Confid.</td></tr>
-      <tr><td>2</td><td>100% des données de santé chiffrées au repos (BDD + sauvegardes)</td><td>Confid.</td></tr>
-      <tr><td>3</td><td>0 CVE critique/haute non corrigée &gt; 30 j sur les images en prod (Trivy)</td><td>Intégrité</td></tr>
-      <tr><td>4</td><td>Disponibilité API ≥ 99%/mois (protection anti-DoS sur le frontal)</td><td>Disponib.</td></tr>
-      <tr><td>5</td><td>100% des accès admin tracés et attribuables, pas de compte partagé</td><td>Preuve</td></tr>
+      <tr><td>1</td><td>Aucun service exposé sans authentification (0 endpoint non protégé — ZAP)</td><td>Confid.</td><td>Tampering, Elevation of privilege</td></tr>
+      <tr><td>2</td><td>100% des données de santé chiffrées au repos (BDD + sauvegardes)</td><td>Confid.</td><td>Information disclosure</td></tr>
+      <tr><td>3</td><td>0 CVE critique/haute non corrigée &gt; 30 j sur les images en prod (Trivy)</td><td>Intégrité</td><td>Elevation of privilege (DVWA)</td></tr>
+      <tr><td>4</td><td>Disponibilité API ≥ 99%/mois (protection anti-DoS sur le frontal)</td><td>Disponib.</td><td>Denial of service</td></tr>
+      <tr><td>5</td><td>100% des accès admin tracés et attribuables, pas de compte partagé</td><td>Preuve</td><td>Repudiation, Spoofing</td></tr>
     </tbody>
   </table>
+  <p style="font-size:7.6pt;color:var(--ink-soft);margin:2px 0 4px">Les 6 lignes de la matrice STRIDE (§5) sont toutes couvertes par au moins un objectif ci-dessus — aucun risque identifié n'est laissé sans traitement associé.</p>
   <p style="font-size:8.6pt"><b>Nmap</b> a révélé un risque d'infra (clés SSH dupliquées, Samba superflu) invisible aux scanners applicatifs.
   <b>ZAP</b> (passif) est adapté à l'interface patient sans risquer de perturber un service de santé (116 alertes Medium exploitables).
   <b>Trivy</b> couvre la chaîne d'approvisionnement logicielle, angle mort des deux autres outils.

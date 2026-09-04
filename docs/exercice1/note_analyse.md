@@ -42,7 +42,7 @@ Voir tableau complet dans `docs/exercice1/registre_actifs.md`. Points saillants 
 
 ### STRIDE (6 actifs, voir `docs/exercice1/stride_risques.md`)
 
-6 lignes, 6 actifs **distincts et nommés** du registre (§2) — pas de menace rattachée à un simple constat sans actif identifié :
+6 lignes, 6 actifs **distincts et nommés** du registre (§2) — pas de menace rattachée à un simple constat sans actif identifié. Chaque V et I est justifié par un critère explicite (grille de cotation dans `stride_risques.md`), pas assigné arbitrairement :
 
 | Menace | Actif (registre) | Risque (V×I) |
 |---|---|---|
@@ -61,7 +61,7 @@ Voir tableau complet dans `docs/exercice1/registre_actifs.md`. Points saillants 
 
 ## 4. Objectifs de sécurité et choix d'outils (Étape 1.4)
 
-Voir `docs/exercice1/objectifs_securite.md` pour le détail. 5 objectifs mesurables rattachés au DICP, couvrant l'authentification, le chiffrement des données de santé, les CVE non corrigées, la disponibilité et la traçabilité des accès admin.
+Voir `docs/exercice1/objectifs_securite.md` pour le détail. 5 objectifs mesurables rattachés au DICP, couvrant l'authentification, le chiffrement des données de santé, les CVE non corrigées, la disponibilité et la traçabilité des accès admin. **Traçabilité complète** : chaque objectif référence explicitement le(s) risque(s) STRIDE qu'il traite, et les 6 lignes de la matrice STRIDE (§3) sont toutes couvertes par au moins un des 5 objectifs.
 
 **Choix des outils** justifié par la complémentarité constatée en pratique :
 - **Nmap** a révélé un risque d'infrastructure (clés SSH dupliquées, Samba superflu) invisible aux scanners applicatifs.
